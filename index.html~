@@ -52,10 +52,10 @@
 	    </ul>
 	  </p>
 	  
-	  <h2>Contact us</h2>
+	  <h3><span class="octicon octicon-link"></span>Contact us</h3>
 	  <p><a href="mailto:lagopus-support@lab.ntt.co.jp">lagopus-support@lab.ntt.co.jp</a></p>
 
-	  <h2>Acknowledgments</h2>
+	  <h3>Acknowledgments</h3>
 	  <p>This study is a part of the O3 project supported by a grant of the Ministry of Internal Affairs and Communications in Japan.</p>
 
 
