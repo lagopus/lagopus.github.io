@@ -48,28 +48,31 @@
 	  <h2>Roadmap</h2>
 	  <ul>
 	    <li>
-	      Version 0.1, 2014 Q2
+	      Version 0.2 (current)
 	      <ul>
-		<li>Pure OpenFlow switch</li>
-		<li>Intel DPDK 1.6.0</li>
-		<li>CLI</li>
+		<li>Pure OpenFlow 1.3.4 switch</li>
+		<li>newly-designed switch configuration datastore</li>
+		<li>new CLI (lagosh) with new configuration format</li>
+		<li>mixed configuration of raw-socket port and DPDK port in dataplane</li>
+		<li>queue support (WRR)</li>
+		<li>new flow lookup algorithm</li>
+		<li>jumbo frame support</li>
+		<li>Intel DPDK 1.8.0 and higher version (2.1.0)</li>
+		<li>Linux & FreeBSD with DPDK library support</li>
+	      </ul>
+	    </li>
+
+	    <li>
+	      Version 0.3, 2015 Q4
+	      <ul>
+		<li>Controller-less L2, L3 support (Learning switch, ICMP, APR, static route)</li>
+		<li>C-plane program integration (Quagga, GoBGP)</li>
+		<li>Whitebox switch (Broadcom Trident2) support</li>
+		<li>Segment Routing (SPRING) routing stack</li>
 	      </ul>
 	    </li>
 	    <li>
-	      Version 0.3, 2014 Q3
-	      <ul>
-		<li>Virtual NIC with KVM</li>
-	      </ul>
-	    </li>
-	    <li>
-	      Version 0.7, 2015 Q1
-	      <ul>
-		<li>Legacy protocol (bridge, L3)</li>
-		<li>New configuration system (OVSDB, OF-CONFIG, new CLI)</li>
-	      </ul>
-	    </li>
-	    <li>
-	      Version 1.0, 2015 Q2
+	      Version 1.0, 2016 Q1
 	      <ul>
 		<li>Tunnel (VxLAN, GRE)</li>
 		<li>SNMP</li>
