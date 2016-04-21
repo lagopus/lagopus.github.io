@@ -48,34 +48,28 @@
 	  <h2>Roadmap</h2>
 	  <ul>
 	    <li>
-	      Version 0.2 (current)
+	      Version 0.2.5 (current)
 	      <ul>
-		<li>Pure OpenFlow 1.3.4 switch</li>
-		<li>newly-designed switch configuration datastore</li>
-		<li>new CLI (lagosh) with new configuration format</li>
-		<li>mixed configuration of raw-socket port and DPDK port in dataplane</li>
-		<li>queue support (WRR)</li>
-		<li>new flow lookup algorithm</li>
-		<li>jumbo frame support</li>
-		<li>Intel DPDK 1.8.0 and higher version (2.1.0)</li>
-		<li>Linux & FreeBSD with DPDK library support</li>
+		      <li>Pure OpenFlow switch 1.3.4 specification</li>
+          <li>General tunnel encap/decap extension</li>
+          <li>High-performance dataplane with DPDK</li>
+		      <li>Mixed configuration of raw-socket port and DPDK port in dataplane</li>
+		      <li>Single-line-based switch configuration datastore</li>
+		      <li>CLI (lagosh) with new configuration format</li>
+		      <li>Queue support (WRR)</li>
+		      <li>New flow lookup algorithm</li>
+		      <li>jumbo frame support</li>
+		      <li>Linux & FreeBSD with DPDK library support</li>
+          <li>Limited support of controller-less L2, L3 support (Learning switch, ICMP, APR, static route)</li>
 	      </ul>
 	    </li>
 
 	    <li>
-	      Version 0.3, 2015 Q4
+	      Version 0.3
 	      <ul>
-		<li>Controller-less L2, L3 support (Learning switch, ICMP, APR, static route)</li>
-		<li>C-plane program integration (Quagga, GoBGP)</li>
-		<li>Whitebox switch (Broadcom Trident2) support</li>
-		<li>Segment Routing (SPRING) routing stack</li>
-	      </ul>
-	    </li>
-	    <li>
-	      Version 1.0, 2016 Q1
-	      <ul>
-		<li>Tunnel (VxLAN, GRE)</li>
-		<li>SNMP</li>
+		      <li>C-plane program integration (Quagga, GoBGP)</li>
+		      <li>Whitebox switch (Broadcom Trident2) support</li>
+		      <li>Segment Routing (SPRING) routing stack</li>
 	      </ul>
 	    </li>
 	  </ul>
@@ -86,9 +80,16 @@
 	    <ul>
 	      <li>Submit bugfixes and improvements by pull-request on <a href="https://github.com/lagopus/lagopus/pulls">GitHub</a>.</li>
 	      <li>Submit bugreport by <a href="https://github.com/lagopus/lagopus/issues">GitHub Issues</a>.</li>
-	      <li>Join the discussion in <a href="https://lists.sourceforge.net/lists/listinfo/lagopus-devel">developers mailing list.</a></li>
 	    </ul>
 	  </p>
+
+    <h2>Community</h2>
+    <p> Join to the Lagopus switch community! Any question and comments are welcome! </p>
+    <ul>
+      <li><a href="https://lagopus-project-slack.herokuapp.com/">Slack</a></li>
+      <li><a href="https://www.facebook.com/groups/802489076486217/"> Lagopus Users Community at Facebook </a></li>
+      <li><a href="https://lists.sourceforge.net/lists/listinfo/lagopus-devel">Developers mailing list</a></li>
+    </ul>
 
 	  <h2>Hands-on Seminar</h2>
 	  <p>
@@ -104,62 +105,59 @@
 	      <li>
 	        <a href="https://atnd.org/events/58417">Lagopus BoF @ InternetWeek 2014</a>, November 18th 2014 (Finished)
 	      </li>
-              <li>
-                <a href="http://www.e-side.co.jp/okinawaopendays/2014/program_ho.html">Lagopus Handson @ Okinawa Open Days 2014</a>, December 11th 2014 (Finished)
-              </li>
-              <li>
-                <a href="https://atnd.org/events/60247">Lagopus Day #3 Osaka</a>, December 19th 2014 (Finished)
-              </li>
-              <li>
-                Lagopus Day #6 Iwate, April 24th 2015 (Finished)
-              </li>
-              <li>
-                <a href="http://connpass.com/event/20234/">Lagopus Day #7 Fukuoka</a>, October 4th 2015 (Finished)
-              </li>
-              <li>
-                <a href="http://www.okinawaopenlabs.org/ood2015_10">Lagopus Handson @ Okinawa Open Days 2015</a>, December 15th 2015 (Finished)
-	      </li> 
-              <li>
-                <a href="">Lagopus Day #8 Fukuoka</a>, March 14th 2016 (Coming soon!!!)
-            </ul>
+        <li>
+          <a href="http://www.e-side.co.jp/okinawaopendays/2014/program_ho.html">Lagopus Handson @ Okinawa Open Days 2014</a>, December 11th 2014 (Finished)
+        </li>
+        <li>
+          <a href="https://atnd.org/events/60247">Lagopus Day #3 Osaka</a>, December 19th 2014 (Finished)
+        </li>
+        <li>
+          Lagopus Day #6 Iwate, April 24th 2015 (Finished)
+        </li>
+        <li>
+          <a href="http://connpass.com/event/20234/">Lagopus Day #7 Fukuoka</a>, October 4th 2015 (Finished)
+        </li>
+        <li>
+          <a href="http://www.okinawaopenlabs.org/ood2015_10">Lagopus Handson @ Okinawa Open Days 2015</a>, December 15th 2015 (Finished)
+	      </li>
+        <li>
+          <a href="">Lagopus Day #8 Fukuoka</a>, March 14th 2016 (Coming soon!!!)
+      </ul>
 	  </p>
 
 	  <h2>Publication</h2>
 	  <p>
 	    <ul>
 	      <li><a href="http://www.slideshare.net/lagopus/dpdk-summit-2015-its-kind-of-fun-to-do-the-impossible-with-dpdk">
-		  DPDK summit 2015: It's kind of fun to do the impossible with DPDK. </a>
-		DPDK Summit 2015, August 2015.
+		      DPDK summit 2015: It's kind of fun to do the impossible with DPDK. </a>
+		      DPDK Summit 2015, August 2015.
 	      </li>
 	      <li><a href="http://www.sdnjapan.org/document_2014/31_session9_Nakajima.pdf">
-		  High-performance software packet processing techniques with Intel x86 server. (in Japanese)</a>
-		SDN Japan 2014, November 2014.
+		      High-performance software packet processing techniques with Intel x86 server. (in Japanese)</a>
+		      SDN Japan 2014, November 2014.
 	      </li>
 	      <li><a href="http://www.slideshare.net/jstleger/dpdk-summit-08-sept-2014-ntt-high-performance-vswitch">
-		  High-performance vSwitch of the user, by the user, for the user.</a>
-		DPDK Summit 2014, September 2014.
+		      High-performance vSwitch of the user, by the user, for the user.</a>
+		      DPDK Summit 2014, September 2014.
 	      </li>
 	      <li><a href="https://www.usenix.org/sites/default/files/ons2014-poster-nakajima.pdf">
-		    Scalable, High-performance, Elastic Software OpenFlow Switch in Userspace for Wide-area Network. </a>
-		    Open Networking Summit 2014, March 2014.
+		      Scalable, High-performance, Elastic Software OpenFlow Switch in Userspace for Wide-area Network. </a>
+		      Open Networking Summit 2014, March 2014.
 	      </li>
 	    </ul>
 	  </p>
-	  <h2>Lagopus users community</h2>
-	  <p><a href="http://www.lagopus.community/cms/">Lagopus users group community site</a>
-　　　　　<p><a href="https://www.facebook.com/groups/802489076486217/?fref=ts">Facebook page</a>
-	  </p>
+
 	  <h2>Acknowledgments</h2>
 	  <p>This study is a part of the O3 project supported by a grant of the Ministry of Internal Affairs and Communications in Japan.</p>
-          <h2>Contuct us</h2>
-          <p>lagopus-support@lab.ntt.co.jp</p>
+    <h2>Contuct us</h2>
+    <p>lagopus-support@lab.ntt.co.jp</p>
 
         </section>
 
         <aside id="sidebar">
 
           <p>This page was generated by <a href="https://pages.github.com">GitHub Pages</a>
-	    using the Architect theme by <a href="https://twitter.com/jasonlong">Jason Long</a>.</p>
+	          using the Architect theme by <a href="https://twitter.com/jasonlong">Jason Long</a>.</p>
         </aside>
       </div>
     </div>
