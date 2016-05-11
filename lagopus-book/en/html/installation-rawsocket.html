@@ -1,0 +1,346 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>3. Installation with raw-socket configuration &mdash; Lagopus software switch book 0.1.0 documentation</title>
+  
+
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+    <link rel="top" title="Lagopus software switch book 0.1.0 documentation" href="index.html"/>
+        <link rel="next" title="4. Installation with DPDK" href="installation-dpdk.html"/>
+        <link rel="prev" title="2. Introduction to Lagopus software switch" href="introduction.html"/> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="index.html" class="icon icon-home"> Lagopus software switch book
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="preface.html">1. About this book</a></li>
+<li class="toctree-l1"><a class="reference internal" href="introduction.html">2. Introduction to Lagopus software switch</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">3. Installation with raw-socket configuration</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#required-software-versions">3.1. Required software versions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#lagopus-installation-steps">3.2. Lagopus installation steps</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#setup-lagopus-configuration-file">3.3. Setup Lagopus configuration file</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#running-lagopus-software-switch">3.4. Running Lagopus software switch</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="installation-dpdk.html">4. Installation with DPDK</a></li>
+<li class="toctree-l1"><a class="reference internal" href="installation-kvm.html">5. Lagopus software switch on KVM Virtual Machine</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cmd-options.html">6. Lagopus software switch command options and examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="lagosh.html">7. Using Lagopus CLI (lagosh)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="datastore.html">8. Lagopus software switch datastore and DSL syntax</a></li>
+<li class="toctree-l1"><a class="reference internal" href="sample-ryu-simplesw.html">9. Sample Configuration: Building Layer 2 switch using Ryu as an OpenFlow controller</a></li>
+<li class="toctree-l1"><a class="reference internal" href="virtualbox.html">10. Appendix: Installing Lagopus vswitch on VirtualBox VM</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="index.html">Lagopus software switch book</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+ 
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="index.html">Docs</a> &raquo;</li>
+      
+    <li>3. Installation with raw-socket configuration</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="_sources/installation-rawsocket.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="installation-with-raw-socket-configuration">
+<span id="ref-installation-rawsocket"></span><h1>3. Installation with raw-socket configuration<a class="headerlink" href="#installation-with-raw-socket-configuration" title="Permalink to this headline">¶</a></h1>
+<p>This section describes how to install Lagopus on Ubuntu installed a bear-metal server and basic configuration using raw-socket mode. This Lagopus configuration is designed for a test of OpenFlow controller application. This configuration does not require special hardware nor DPDK NICs, therefore, you can install any environment on a bare-metal server and a virtual machine <a class="footnote-reference" href="#id2" id="id1">[1]</a>.
+If you want to enable &#8220;DPDK&#8221; for performance and scalability, please refer to <a class="reference internal" href="installation-dpdk.html#ref-installation-dpdk"><span class="std std-ref">Installation with DPDK</span></a>.</p>
+<table class="docutils footnote" frame="void" id="id2" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id1">[1]</a></td><td>Actual steps are confirmed on VMware Fusion and VirtualBox VM, which should be identical to the steps on bear-metal server.</td></tr>
+</tbody>
+</table>
+<div class="section" id="required-software-versions">
+<h2>3.1. Required software versions<a class="headerlink" href="#required-software-versions" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li>Lagopus: <a class="reference external" href="https://github.com/lagopus/lagopus/releases/tag/v0.2.6">Lagopus software switch 0.2.6</a></li>
+<li>Linux distribution: <a class="reference external" href="http://www.ubuntu.com/download/server">Ubuntu Server 16.04 LTS</a></li>
+</ul>
+</div>
+<div class="section" id="lagopus-installation-steps">
+<h2>3.2. Lagopus installation steps<a class="headerlink" href="#lagopus-installation-steps" title="Permalink to this headline">¶</a></h2>
+<ul>
+<li><p class="first">Install Linux to a bear-metal server or a VM.</p>
+</li>
+<li><p class="first">Install prerequisite software packages.</p>
+<div class="highlight-console"><div class="highlight"><pre><span></span><span class="gp">$</span> sudo apt-get update
+<span class="gp">$</span> sudo apt-get install build-essential libexpat-dev libgmp-dev <span class="se">\</span>
+<span class="go">             libssl-dev libpcap-dev byacc flex git \</span>
+<span class="go">             python-dev python-pastedeploy python-paste python-twisted \</span>
+<span class="go">             wget</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">Download source code.</p>
+<div class="highlight-console"><div class="highlight"><pre><span></span><span class="gp">$</span> wget https://github.com/lagopus/lagopus/archive/v0.2.6.tar.gz
+<span class="gp">$</span> tar xvf v0.2.6.tar.gz
+<span class="gp">$</span> ls
+<span class="go">lagopus-0.2.6  v0.2.6.tar.gz</span>
+<span class="gp">$</span>
+</pre></div>
+</div>
+<p>or</p>
+<div class="highlight-console"><div class="highlight"><pre><span></span><span class="gp">$</span> git clone --depth<span class="o">=</span><span class="m">1</span> -b v0.2.6 https://github.com/lagopus/lagopus.git
+<span class="gp">$</span> ls
+<span class="go">lagopus</span>
+<span class="gp">$</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">Configure and compile Lagopus software switch with raw-socket mode option.</p>
+<div class="highlight-console"><div class="highlight"><pre><span></span><span class="gp">$</span> <span class="nb">cd</span> lagopus-0.2.6
+<span class="gp">$</span> ./configure --disable-dpdk
+<span class="gp">$</span> make
+</pre></div>
+</div>
+</li>
+<li><p class="first">Install Lagopus software switch</p>
+<div class="highlight-console"><div class="highlight"><pre><span></span><span class="gp">$</span> sudo make install
+</pre></div>
+</div>
+</li>
+</ul>
+</div>
+<div class="section" id="setup-lagopus-configuration-file">
+<h2>3.3. Setup Lagopus configuration file<a class="headerlink" href="#setup-lagopus-configuration-file" title="Permalink to this headline">¶</a></h2>
+<p>Example Lagopus configuration (DSL format) can be found at &#8220;misc/examples/lagopus.dsl&#8221;.
+<code class="docutils literal"><span class="pre">lagopus.dsl</span></code> file must be located at the same directory of the executable of lagopus software switch, or under <code class="docutils literal"><span class="pre">/usr/local/etc/lagopus/</span></code>.</p>
+<ul>
+<li><p class="first">Copy sample configuration file under <code class="docutils literal"><span class="pre">/usr/local/etc/lagopus/</span></code>.</p>
+<div class="highlight-console"><div class="highlight"><pre><span></span><span class="gp">$</span> sudo mkdir /usr/local/etc/lagopus/
+<span class="gp">$</span> <span class="nb">cd</span> ~/lagopus-0.2.6
+<span class="gp">$</span> sudo cp misc/examples/lagopus.dsl /usr/local/etc/lagopus/lagopus.dsl
+</pre></div>
+</div>
+</li>
+<li><p class="first">Edit configuration file suited to your environment.</p>
+<ul>
+<li><p class="first">Example:</p>
+<ul class="simple">
+<li>One OpenFlow controller: &#8220;127.0.0.1&#8221;</li>
+<li><code class="docutils literal"><span class="pre">eth0</span></code>:  Management interface. (Thus does not appear in the configuration)</li>
+<li><code class="docutils literal"><span class="pre">eth1</span></code>, <code class="docutils literal"><span class="pre">eth2</span></code> are used as Lagopus dataplane port. These two port are accessed with raw-socket mode.</li>
+</ul>
+<div class="highlight-console"><div class="highlight"><pre><span></span><span class="gp">$</span> sudo vi /usr/local/etc/lagopus/lagopus.dsl
+<span class="go">channel channel01 create -dst-addr 127.0.0.1 -protocol tcp</span>
+<span class="go">controller controller01 create -channel channel01 -role equal -connection-type main</span>
+<span class="go">interface interface01 create -type ethernet-rawsock -device eth1</span>
+<span class="go">interface interface02 create -type ethernet-rawsock -device eth2</span>
+<span class="go">port port01 create -interface interface01</span>
+<span class="go">port port02 create -interface interface02</span>
+<span class="go">bridge bridge01 create -controller controller01 -port port01 1 -port port02 2 -dpid 0x1</span>
+<span class="go">bridge bridge01 enable</span>
+<span class="gp">$</span>
+</pre></div>
+</div>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="section" id="running-lagopus-software-switch">
+<h2>3.4. Running Lagopus software switch<a class="headerlink" href="#running-lagopus-software-switch" title="Permalink to this headline">¶</a></h2>
+<p>Enter <code class="docutils literal"><span class="pre">$</span> <span class="pre">sudo</span> <span class="pre">lagopus</span></code> to run Lagopus software switch. The basic process management of Lagopus software switch is done by lagopus command line <a class="footnote-reference" href="#id5" id="id3">[2]</a> .</p>
+<p>After the execution of Lagopus software switch, its operation and management are executed by <code class="docutils literal"><span class="pre">lagosh</span></code> <a class="footnote-reference" href="#id6" id="id4">[3]</a> that is CLI tool for network operators. <code class="docutils literal"><span class="pre">lagosh</span></code> command line syntax is very similar to the existing network equipment.
+Enter <code class="docutils literal"><span class="pre">show</span> <span class="pre">version</span></code> command to confirm it&#8217;s running or not.
+Enter <code class="docutils literal"><span class="pre">stop</span></code> command from lagosh to stop Lagopus software switch.</p>
+<div class="highlight-console"><div class="highlight"><pre><span></span><span class="gp">$</span> sudo lagopus
+<span class="gp">$</span> lagosh
+<span class="go">Lagosh&gt; show version</span>
+<span class="go">{</span>
+<span class="go">    &quot;product-name&quot;: &quot;Lagopus&quot;,</span>
+<span class="go">    &quot;version&quot;: &quot;0.2.6-release&quot;</span>
+<span class="go">}</span>
+<span class="go">Lagosh&gt; stop</span>
+<span class="go">Lagosh&gt; show version</span>
+<span class="go">Socket connection refused.  Lagopus is not running?</span>
+<span class="go">Lagosh&gt; exit</span>
+<span class="gp">$</span>
+</pre></div>
+</div>
+<table class="docutils footnote" frame="void" id="id5" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id3">[2]</a></td><td>For more configuration options, refer to <a class="reference internal" href="cmd-options.html#ref-cmd-options"><span class="std std-ref">Lagopus software switch command options and examples</span></a></td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="id6" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id4">[3]</a></td><td>For more information about lagosh, refer to <a class="reference internal" href="lagosh.html#ref-lagosh"><span class="std std-ref">Using Lagopus CLI (lagosh)</span></a></td></tr>
+</tbody>
+</table>
+</div>
+</div>
+
+
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="installation-dpdk.html" class="btn btn-neutral float-right" title="4. Installation with DPDK" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="introduction.html" class="btn btn-neutral" title="2. Introduction to Lagopus software switch" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2016, NIPPON TELEGRAPH AND TELEPHONE CORPORATION.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'0.1.0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>
