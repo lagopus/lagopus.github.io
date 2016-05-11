@@ -1,0 +1,797 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>5. Lagopus software switch on KVM Virtual Machine &mdash; Lagopus software switch book 0.1.0 documentation</title>
+  
+
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+    <link rel="top" title="Lagopus software switch book 0.1.0 documentation" href="index.html"/>
+        <link rel="next" title="6. Lagopus software switch command options and examples" href="cmd-options.html"/>
+        <link rel="prev" title="4. Installation with DPDK" href="installation-dpdk.html"/> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="index.html" class="icon icon-home"> Lagopus software switch book
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="preface.html">1. About this book</a></li>
+<li class="toctree-l1"><a class="reference internal" href="introduction.html">2. Introduction to Lagopus software switch</a></li>
+<li class="toctree-l1"><a class="reference internal" href="installation-rawsocket.html">3. Installation with raw-socket configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="installation-dpdk.html">4. Installation with DPDK</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">5. Lagopus software switch on KVM Virtual Machine</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#software-versions">5.1. Software Versions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#overall-topology-and-client-host-setup">5.2. Overall topology and client host setup</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#setup-client-hosts-and-bridges-on-kvm-host">5.3. Setup client hosts and bridges on KVM host</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#kvm-installation-and-vm-creation-ubuntu">5.4. KVM installation and VM creation (Ubuntu)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#kvm-installation">5.4.1. KVM installation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#vm-creation-using-virt-install">5.4.2. VM creation using virt-install</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#connecting-to-vm-via-ssh-from-kvm-host-usermode-networking">5.4.3. Connecting to VM via SSH from KVM host (Usermode Networking)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#adding-network-interface-to-vm">5.4.4. Adding network interface to VM</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#lagopus-installation-steps-on-kvm-vm">5.5. Lagopus installation steps on KVM VM</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#installing-lagopus-to-vm-raw-socket">5.5.1. Installing Lagopus to VM (raw socket)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#setup-lagopus-configuration">5.5.2. Setup Lagopus configuration</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#building-layer-2-switch-using-ryu-as-an-openflow-controller">5.6. Building Layer 2 switch using Ryu as an OpenFlow controller</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#setup-ryu-simple-switch">5.6.1. Setup Ryu Simple switch</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#confirm-ping-works-via-lagopus-software-switch">5.6.2. Confirm ping works via Lagopus software switch</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="cmd-options.html">6. Lagopus software switch command options and examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="lagosh.html">7. Using Lagopus CLI (lagosh)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="datastore.html">8. Lagopus software switch datastore and DSL syntax</a></li>
+<li class="toctree-l1"><a class="reference internal" href="sample-ryu-simplesw.html">9. Sample Configuration: Building Layer 2 switch using Ryu as an OpenFlow controller</a></li>
+<li class="toctree-l1"><a class="reference internal" href="virtualbox.html">10. Appendix: Installing Lagopus vswitch on VirtualBox VM</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="index.html">Lagopus software switch book</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+ 
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="index.html">Docs</a> &raquo;</li>
+      
+    <li>5. Lagopus software switch on KVM Virtual Machine</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="_sources/installation-kvm.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="lagopus-software-switch-on-kvm-virtual-machine">
+<span id="ref-installation-kvm"></span><h1>5. Lagopus software switch on KVM Virtual Machine<a class="headerlink" href="#lagopus-software-switch-on-kvm-virtual-machine" title="Permalink to this headline">¶</a></h1>
+<p>This section describes:</p>
+<ul class="simple">
+<li>How to install Lagopus on KVM-based virtual machine.</li>
+<li>Example configuration to run Lagopus software switch as Layer 2 switch using Ryu as an OpenFlow controller.</li>
+<li>Lagopus with raw-socket mode will be used.</li>
+</ul>
+<div class="section" id="software-versions">
+<h2>5.1. Software Versions<a class="headerlink" href="#software-versions" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li>Lagopus software switch: <a class="reference external" href="https://github.com/lagopus/lagopus/releases/tag/v0.2.6">Lagopus software switch 0.2.6</a></li>
+<li>OS: Linux <a class="reference external" href="http://www.ubuntu.com/download/server">Ubuntu Server 14.04.3 LTS</a></li>
+</ul>
+</div>
+<div class="section" id="overall-topology-and-client-host-setup">
+<h2>5.2. Overall topology and client host setup<a class="headerlink" href="#overall-topology-and-client-host-setup" title="Permalink to this headline">¶</a></h2>
+<p>In this example, we will connect two client hosts to Lagopus software switch bridge ports.</p>
+<ul class="simple">
+<li>KVM VM running Lagopus software switch, client hosts, and bridges to connect them are all created on KVM host.</li>
+<li>Client hosts are created using network namespace (netns) for simplicity.</li>
+<li>You can also create and use KVM VM as client host instead of netns.</li>
+</ul>
+<img alt="_images/kvm-ryu-simplesw-01.png" src="_images/kvm-ryu-simplesw-01.png" />
+</div>
+<div class="section" id="setup-client-hosts-and-bridges-on-kvm-host">
+<h2>5.3. Setup client hosts and bridges on KVM host<a class="headerlink" href="#setup-client-hosts-and-bridges-on-kvm-host" title="Permalink to this headline">¶</a></h2>
+<ul>
+<li><p class="first">edit <code class="docutils literal"><span class="pre">/etc/network/interfaces</span></code> to setup vethpair, netns and bridge.</p>
+</li>
+<li><p class="first">reboot to apply the changes you just made.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last"><code class="docutils literal"><span class="pre">sudo</span> <span class="pre">/etc/init.d/networking</span> <span class="pre">restart</span></code> does not work on Ubuntu 14.04.</p>
+</div>
+<div class="highlight-console"><div class="highlight"><pre><span></span><span class="gp">$</span> sudo vi /etc/network/interfaces
+<span class="gp">$</span> cat /etc/network/interfaces
+<span class="go">auto veth1</span>
+<span class="go">iface veth1 inet manual</span>
+<span class="go">    pre-up ip link add veth1 type veth peer name gveth1</span>
+<span class="go">    pre-up ip netns add host1</span>
+<span class="go">    pre-up ip link set gveth1 netns host1</span>
+<span class="go">    pre-up ip netns exec host1 ip link set gveth1 up</span>
+<span class="go">    pre-up ip netns exec host1 ip addr add 10.0.0.1/24 brd + dev gveth1</span>
+<span class="go">    post-down ip link del veth1</span>
+
+<span class="go">auto veth2</span>
+<span class="go">iface veth2 inet manual</span>
+<span class="go">    pre-up ip link add veth2 type veth peer name gveth2</span>
+<span class="go">    pre-up ip netns add host2</span>
+<span class="go">    pre-up ip link set gveth2 netns host2</span>
+<span class="go">    pre-up ip netns exec host2 ip link set gveth2 up</span>
+<span class="go">    pre-up ip netns exec host2 ip addr add 10.0.0.2/24 brd + dev gveth2</span>
+<span class="go">    post-down ip link del veth2</span>
+
+<span class="go">auto br1 br2</span>
+<span class="go">iface br1 inet manual</span>
+<span class="go">    bridge_ports veth1</span>
+<span class="go">iface br2 inet manual</span>
+<span class="go">    bridge_ports veth2</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">Confirm bridges are created and interfaces are connected.</p>
+<div class="highlight-console"><div class="highlight"><pre><span></span><span class="gp">$</span> brctl show
+<span class="go">bridge name     bridge id               STP enabled     interfaces</span>
+<span class="go">br1             8000.a2b53bff4545       no              veth1</span>
+<span class="go">br2             8000.fe7797ec6779       no              veth2</span>
+<span class="go">virbr0          8000.000000000000       yes</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">Confirm IP address is correctly configured on client hosts (gveth1/gveth2).</p>
+<div class="highlight-console"><div class="highlight"><pre><span></span><span class="gp">$</span> sudo ip netns <span class="nb">exec</span> host1 ip a
+<span class="go">1: lo: &lt;LOOPBACK&gt; mtu 65536 qdisc noop state DOWN group default</span>
+<span class="go">    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00</span>
+<span class="go">9: gveth1@if10: &lt;NO-CARRIER,BROADCAST,MULTICAST,UP&gt; mtu 1500 qdisc pfifo_fast state LOWERLAYERDOWN group default qlen 1000</span>
+<span class="go">    link/ether c2:5f:77:74:3e:97 brd ff:ff:ff:ff:ff:ff</span>
+<span class="go">    inet 10.0.0.1/24 brd 10.0.0.255 scope global gveth1</span>
+<span class="go">       valid_lft forever preferred_lft forever</span>
+
+<span class="gp">$</span> sudo ip netns <span class="nb">exec</span> host2 ip a
+<span class="go">1: lo: &lt;LOOPBACK&gt; mtu 65536 qdisc noop state DOWN group default</span>
+<span class="go">    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00</span>
+<span class="go">11: gveth2@if12: &lt;NO-CARRIER,BROADCAST,MULTICAST,UP&gt; mtu 1500 qdisc pfifo_fast state LOWERLAYERDOWN group default qlen 1000</span>
+<span class="go">    link/ether ca:6a:eb:34:3c:f0 brd ff:ff:ff:ff:ff:ff</span>
+<span class="go">    inet 10.0.0.2/24 brd 10.0.0.255 scope global gveth2</span>
+<span class="go">       valid_lft forever preferred_lft forever</span>
+</pre></div>
+</div>
+</li>
+</ul>
+</div>
+<div class="section" id="kvm-installation-and-vm-creation-ubuntu">
+<h2>5.4. KVM installation and VM creation (Ubuntu)<a class="headerlink" href="#kvm-installation-and-vm-creation-ubuntu" title="Permalink to this headline">¶</a></h2>
+<p>Details about installing and running KVM on Ubuntu, refer to <a class="reference external" href="https://help.ubuntu.com/community/KVM/Installation">ubuntu documentation: KVM/Installation</a> .</p>
+<div class="section" id="kvm-installation">
+<h3>5.4.1. KVM installation<a class="headerlink" href="#kvm-installation" title="Permalink to this headline">¶</a></h3>
+<ul>
+<li><p class="first">KVM requires CPU supporting Intel VT or AMD-V. Confirm it with below command.</p>
+</li>
+<li><p class="first">It&#8217;s supported if result was 1 or more. Not supported if 0 (zero).</p>
+<div class="highlight-console"><div class="highlight"><pre><span></span><span class="gp">$</span> egrep -c <span class="s1">&#39;(vmx|svm)&#39;</span> /proc/cpuinfo
+<span class="go">4</span>
+<span class="gp">$</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">Install necessary packages. (listed below)</p>
+</li>
+<li><p class="first">reboot and log in.</p>
+</li>
+<li><p class="first">Check installation was completed using <code class="docutils literal"><span class="pre">virsh</span></code> and <code class="docutils literal"><span class="pre">lsmod</span></code>.</p>
+<div class="highlight-console"><div class="highlight"><pre><span></span><span class="gp">$</span> sudo apt-get update
+<span class="gp">$</span> sudo apt-get install qemu-kvm libvirt-bin ubuntu-vm-builder bridge-utils virtinst
+<span class="gp">$</span> sudo reboot
+
+<span class="go">... after reboot and log in...</span>
+
+<span class="gp">$</span> virsh version
+<span class="go">Compiled against library: libvirt 1.2.2</span>
+<span class="go">Using library: libvirt 1.2.2</span>
+<span class="go">Using API: QEMU 1.2.2</span>
+<span class="go">Running hypervisor: QEMU 2.0.0</span>
+
+<span class="gp">$</span> lsmod <span class="p">|</span> grep kvm
+<span class="go">kvm_intel             163840  0</span>
+<span class="go">kvm                   507904  1 kvm_intel</span>
+</pre></div>
+</div>
+</li>
+</ul>
+</div>
+<div class="section" id="vm-creation-using-virt-install">
+<h3>5.4.2. VM creation using virt-install<a class="headerlink" href="#vm-creation-using-virt-install" title="Permalink to this headline">¶</a></h3>
+<p>There are two different options to create VM on headless server, <code class="docutils literal"><span class="pre">virt-install</span></code> and <code class="docutils literal"><span class="pre">vmbuilder</span></code>. The difference is <code class="docutils literal"><span class="pre">vmbuilder</span></code> is for creating Ubuntu-based guests, whereas virt-install lets you install other kinds of operationg systems, which are other Linux distributions and other OS like Windows, FreeBSD etc.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">There used to be a command called &#8220;Ubuntu-vm-builder&#8221;, which is now a wrapper to vmbuilder. It&#8217;s now only maintained for compatibility wih previous scripts, thus recommend using vmbuilder.</p>
+</div>
+<ul>
+<li><p class="first">Download ISO image of Ubuntu Server. (in <code class="docutils literal"><span class="pre">~/img</span></code>)</p>
+<div class="highlight-console"><div class="highlight"><pre><span></span><span class="gp">$</span> mkdir ~/img
+<span class="gp">$</span> <span class="nb">cd</span> ~/img
+<span class="go">~/img$ wget http://ftp.riken.jp/Linux/ubuntu-releases/14.04.4/ubuntu-14.04.3-server-amd64.iso</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">Create VM (use <code class="docutils literal"><span class="pre">--dry-run</span></code> to check without actually creating VM)</p>
+<div class="highlight-console"><div class="highlight"><pre><span></span><span class="gp">$</span> sudo virt-install <span class="se">\</span>
+<span class="go">--name lagopus \</span>
+<span class="go">--ram 4096 \</span>
+<span class="go">--disk path=/var/lib/libvirt/images/lagopus.img,size=30 \</span>
+<span class="go">--vcpus 2 \</span>
+<span class="go">--cpu host \</span>
+<span class="go">--os-type linux \</span>
+<span class="go">--os-variant ubuntutrusty \</span>
+<span class="go">--virt-type=kvm \</span>
+<span class="go">--noautoconsole \</span>
+<span class="go">-c ~/img/ubuntu-14.04.3-server-amd64.iso \</span>
+<span class="go">--graphics vnc,listen=0.0.0.0,password=vnc</span>
+
+<span class="go">Starting install...</span>
+<span class="go">Allocating &#39;lagopus.img&#39;                                   |  30 GB     00:00</span>
+<span class="go">Creating domain...                                         |    0 B     00:00</span>
+<span class="go">Domain installation still in progress. You can reconnect to</span>
+<span class="go">the console to complete the installation process.</span>
+
+<span class="go">(Confirm VM was created successfully)</span>
+<span class="gp">$</span> virsh list
+<span class="go"> Id    Name                           State</span>
+<span class="go">----------------------------------------------------</span>
+<span class="go"> 4     lagopus                        running</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">Continue OS (Ubuntu) installation on the VM.</p>
+<ul class="simple">
+<li>Check vnc display number assigned to the newly created VM.</li>
+<li>Connect to the VM via VNC. &lt;kvm-host-ip&gt;:&lt;vnc-display&gt;</li>
+</ul>
+<div class="highlight-console"><div class="highlight"><pre><span></span><span class="gp">$</span> virsh vncdisplay lagopus
+<span class="go">:0</span>
+<span class="gp">#</span> VNC display number is <span class="s2">&quot;0&quot;</span> <span class="k">for</span> above <span class="k">case</span>.
+<span class="gp">#</span> Continue installation by connecting via VNC.
+</pre></div>
+</div>
+</li>
+<li><p class="first">Start VM after OS installation.</p>
+</li>
+<li><p class="first">VM will shut down after installing OS and would not start automatically by default.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Hostname of the VM was set as <strong>lagopus-kvm</strong> in this example.</p>
+</div>
+<div class="highlight-console"><div class="highlight"><pre><span></span><span class="gp">$</span> virsh list --all
+<span class="go"> Id    Name                           State</span>
+<span class="go">----------------------------------------------------</span>
+<span class="go"> -     lagopus                        shut off</span>
+
+<span class="gp">$</span> virsh start lagopus
+<span class="go">Domain lagopus started</span>
+
+<span class="gp">$</span> virsh list --all
+<span class="go"> Id    Name                           State</span>
+<span class="go">----------------------------------------------------</span>
+<span class="go"> 4     lagopus                        running</span>
+</pre></div>
+</div>
+</li>
+</ul>
+</div>
+<div class="section" id="connecting-to-vm-via-ssh-from-kvm-host-usermode-networking">
+<h3>5.4.3. Connecting to VM via SSH from KVM host (Usermode Networking)<a class="headerlink" href="#connecting-to-vm-via-ssh-from-kvm-host-usermode-networking" title="Permalink to this headline">¶</a></h3>
+<p>By default, VM will have interface automatically connected to a bridge created local to KVM host. (ex: &#8220;virbr0&#8221;)</p>
+<p>This is called &#8220;Usermode Networking&#8221;, where you can:</p>
+<ul>
+<li><p class="first">Access external network from VM via host (NAT).</p>
+</li>
+<li><p class="first">Connect to VM from host via SSH.</p>
+<p>To connect to VM from host via SSH:</p>
+</li>
+<li><p class="first">Connect to VM via VNC and confirm IP address assigned to it.</p>
+</li>
+<li><p class="first"><code class="docutils literal"><span class="pre">$</span> <span class="pre">ssh</span> <span class="pre">&lt;VM-usermode-interface-ip&gt;</span></code> from KVM host.</p>
+</li>
+</ul>
+</div>
+<div class="section" id="adding-network-interface-to-vm">
+<h3>5.4.4. Adding network interface to VM<a class="headerlink" href="#adding-network-interface-to-vm" title="Permalink to this headline">¶</a></h3>
+<ul>
+<li><p class="first">Confirm existing network interfaces on VM (named &#8220;lagopus&#8221;).</p>
+<div class="highlight-console"><div class="highlight"><pre><span></span><span class="gp">$</span> virsh domiflist lagopus
+<span class="go">Interface  Type       Source     Model       MAC</span>
+<span class="go">-------------------------------------------------------</span>
+<span class="go">-          network    default    virtio      52:54:00:6a:f2:f8</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">Add two interfaces to VM. (use different MAC address)</p>
+</li>
+<li><p class="first">Script to generate MAC address.</p>
+<div class="highlight-console"><div class="highlight"><pre><span></span><span class="gp">$</span> vi genmac.sh
+<span class="gp">#</span>!/bin/bash
+<span class="gp">#</span> generate a random mac address <span class="k">for</span> the qemu nic
+<span class="go">printf &#39;52:54:00:%02x:%02x:%02x\n&#39; $((RANDOM%256)) $((RANDOM%256)) $((RANDOM%256))</span>
+
+<span class="go">example:</span>
+<span class="gp">$</span> ./genmac.sh
+<span class="go">52:54:00:f0:bd:b1</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">virsh command to add interfaces to VM.</p>
+<div class="highlight-console"><div class="highlight"><pre><span></span><span class="gp">$</span> virsh attach-interface --domain lagopus --type bridge <span class="se">\</span>
+<span class="go">        --source br1 --model virtio \</span>
+<span class="go">        --mac 52:54:00:f0:bd:b1 --config --live</span>
+<span class="go">Interface attached successfully</span>
+<span class="gp">$</span> virsh attach-interface --domain lagopus --type bridge <span class="se">\</span>
+<span class="go">        --source br2 --model virtio \</span>
+<span class="go">        --mac 52:54:00:0f:69:9c --config --live</span>
+<span class="go">Interface attached successfully</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">Options:</p>
+<blockquote>
+<div><table class="docutils option-list" frame="void" rules="none">
+<col class="option" />
+<col class="description" />
+<tbody valign="top">
+<tr><td class="option-group">
+<kbd><span class="option">--domain</span></kbd></td>
+<td><p class="first last">name of the VM you wan to add interface</p>
+</td></tr>
+<tr><td class="option-group">
+<kbd><span class="option">--source</span></kbd></td>
+<td><p class="first last">bridge on KVM host to connect the interface</p>
+</td></tr>
+<tr><td class="option-group">
+<kbd><span class="option">--type</span></kbd></td>
+<td><p class="first last">type of interface: network, bridge</p>
+</td></tr>
+<tr><td class="option-group">
+<kbd><span class="option">--model</span></kbd></td>
+<td><p class="first last">NIC model: virtio, e1000 etc.</p>
+</td></tr>
+<tr><td class="option-group">
+<kbd><span class="option">--mac</span></kbd></td>
+<td><p class="first last">MAC address of the interface</p>
+</td></tr>
+<tr><td class="option-group">
+<kbd><span class="option">--config</span></kbd></td>
+<td><p class="first last">flag to make it persistant after VM reboot</p>
+</td></tr>
+<tr><td class="option-group">
+<kbd><span class="option">--live</span></kbd></td>
+<td><p class="first last">flag to apply change immediately on a running VM</p>
+</td></tr>
+</tbody>
+</table>
+</div></blockquote>
+</li>
+<li><p class="first">Confirm interfaces are created and connected to bridge &#8220;br1&#8221; and &#8220;br2&#8221;.</p>
+<div class="highlight-console"><div class="highlight"><pre><span></span><span class="gp">$</span> virsh domiflist lagopus
+<span class="go">Interface  Type       Source     Model       MAC</span>
+<span class="go">-------------------------------------------------------</span>
+<span class="go">vnet0      network    default    virtio      52:54:00:6a:f2:f8</span>
+<span class="go">vnet1      bridge     br1        virtio      52:54:00:f0:bd:b1</span>
+<span class="go">vnet2      bridge     br2        virtio      52:54:00:0f:69:9c</span>
+
+<span class="gp">$</span> brctl show
+<span class="go">bridge name     bridge id               STP enabled     interfaces</span>
+<span class="go">br1             8000.a2b53bff4545       no              veth1</span>
+<span class="go">                                                        vnet1</span>
+<span class="go">br2             8000.fe54000f699c       no              veth2</span>
+<span class="go">                                                        vnet2</span>
+<span class="go">virbr0          8000.fe54006af2f8       yes             vnet0</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">Connect to VM (via SSH)</p>
+</li>
+<li><p class="first">Confirm two interfaces (eth1/eth2) were added.</p>
+<div class="highlight-console"><div class="highlight"><pre><span></span><span class="gp">$</span> ssh &lt;vm-ip-address&gt;
+<span class="go">&lt;usr&gt;@&lt;vm-ip-address&gt;&#39;s password:</span>
+
+<span class="gp">lagopus-kvm:~$</span> ip a
+<span class="go">1: lo: &lt;LOOPBACK,UP,LOWER_UP&gt; mtu 65536 qdisc noqueue state UNKNOWN group default</span>
+<span class="go">    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00</span>
+<span class="go">    inet 127.0.0.1/8 scope host lo</span>
+<span class="go">       valid_lft forever preferred_lft forever</span>
+<span class="go">    inet6 ::1/128 scope host</span>
+<span class="go">       valid_lft forever preferred_lft forever</span>
+<span class="go">2: eth0: &lt;BROADCAST,MULTICAST,UP,LOWER_UP&gt; mtu 1500 qdisc pfifo_fast state UP group default qlen 1000</span>
+<span class="go">    link/ether 52:54:00:6a:f2:f8 brd ff:ff:ff:ff:ff:ff</span>
+<span class="go">    inet 192.168.122.224/24 brd 192.168.122.255 scope global eth0</span>
+<span class="go">       valid_lft forever preferred_lft forever</span>
+<span class="go">    inet6 fe80::5054:ff:fe6a:f2f8/64 scope link</span>
+<span class="go">       valid_lft forever preferred_lft forever</span>
+<span class="go">3: eth1: &lt;BROADCAST,MULTICAST&gt; mtu 1500 qdisc noop state DOWN group default qlen 1000</span>
+<span class="go">    link/ether 52:54:00:f0:bd:b1 brd ff:ff:ff:ff:ff:ff</span>
+<span class="go">4: eth2: &lt;BROADCAST,MULTICAST&gt; mtu 1500 qdisc noop state DOWN group default qlen 1000</span>
+<span class="go">    link/ether 52:54:00:0f:69:9c brd ff:ff:ff:ff:ff:ff</span>
+
+<span class="gp">lagopus-kvm:~$</span> ethtool -i eth1
+<span class="go">driver: virtio_net</span>
+<span class="go">version: 1.0.0</span>
+<span class="go">firmware-version:</span>
+<span class="go">bus-info: 0000:00:06.0</span>
+<span class="go">supports-statistics: no</span>
+<span class="go">supports-test: no</span>
+<span class="go">supports-eeprom-access: no</span>
+<span class="go">supports-register-dump: no</span>
+<span class="go">supports-priv-flags: no</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">Make newly added interface (eth1/eth2) permanetly up during boot.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">you don&#8217;t need to assign IP address to Lagopus ports.</p>
+</div>
+<div class="highlight-console"><div class="highlight"><pre><span></span><span class="gp">lagopus-kvm:~$</span> sudo vi /etc/network/interfaces
+<span class="gp">#</span> add below lines
+<span class="go">auto eth1</span>
+<span class="go">iface eth1 inet manual</span>
+<span class="go">  up ip link set eth1 up</span>
+<span class="go">  down ip link set eth1 down</span>
+
+<span class="go">auto eth2</span>
+<span class="go">iface eth2 inet manual</span>
+<span class="go">  up ip link set eth2 up</span>
+<span class="go">  down ip link set eth2 down</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">reboot or manually apply setting by <code class="docutils literal"><span class="pre">ifup</span></code> command.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last"><code class="docutils literal"><span class="pre">sudo</span> <span class="pre">/etc/init.d/networking</span> <span class="pre">restart</span></code> does not work on Ubuntu 14.04.</p>
+</div>
+<div class="highlight-console"><div class="highlight"><pre><span></span><span class="gp">lagopus-kvm:~$</span> sudo ifup eth1
+<span class="gp">lagopus-kvm:~$</span> sudo ifup eth2
+</pre></div>
+</div>
+</li>
+</ul>
+</div>
+</div>
+<div class="section" id="lagopus-installation-steps-on-kvm-vm">
+<h2>5.5. Lagopus installation steps on KVM VM<a class="headerlink" href="#lagopus-installation-steps-on-kvm-vm" title="Permalink to this headline">¶</a></h2>
+<p>Proceed following steps inside the VM.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">all operations in this section are done INSIDE the VM</p>
+</div>
+<div class="section" id="installing-lagopus-to-vm-raw-socket">
+<h3>5.5.1. Installing Lagopus to VM (raw socket)<a class="headerlink" href="#installing-lagopus-to-vm-raw-socket" title="Permalink to this headline">¶</a></h3>
+<ul>
+<li><p class="first">Install necessary packages. (described below)</p>
+<div class="highlight-console"><div class="highlight"><pre><span></span><span class="gp">lagopus-kvm:~$</span> sudo apt-get install build-essential libexpat-dev libgmp-dev <span class="se">\</span>
+<span class="go">    libssl-dev libpcap-dev byacc flex git \</span>
+<span class="go">    python-dev python-pastedeploy python-paste python-twisted</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">Download Lagopus software switch source code.</p>
+<div class="highlight-console"><div class="highlight"><pre><span></span><span class="gp">lagopus-kvm:~$</span> git clone -b v0.2.6 --recursive https://github.com/lagopus/lagopus.git
+</pre></div>
+</div>
+</li>
+<li><p class="first">Compile and install Lagopus software switch with raw-socket mode</p>
+<div class="highlight-console"><div class="highlight"><pre><span></span><span class="gp">lagopus-kvm:~$</span> ./configure --disable-dpdk
+<span class="gp">lagopus-kvm:~$</span> make
+<span class="gp">lagopus-kvm:~$</span> sudo make install
+</pre></div>
+</div>
+</li>
+</ul>
+</div>
+<div class="section" id="setup-lagopus-configuration">
+<h3>5.5.2. Setup Lagopus configuration<a class="headerlink" href="#setup-lagopus-configuration" title="Permalink to this headline">¶</a></h3>
+<ul>
+<li><p class="first">Copy sample configuration file under <code class="docutils literal"><span class="pre">/usr/local/etc/lagopus/</span></code>.</p>
+<div class="highlight-console"><div class="highlight"><pre><span></span><span class="gp">lagopus-kvm:~$</span> sudo mkdir /usr/local/etc/lagopus/
+<span class="gp">lagopus-kvm:~$</span> <span class="nb">cd</span> ~/lagopus
+<span class="gp">lagopus-kvm:~$</span> sudo cp misc/examples/lagopus.dsl /usr/local/etc/lagopus/lagopus.dsl
+</pre></div>
+</div>
+</li>
+<li><p class="first">Edit <code class="docutils literal"><span class="pre">lagopus.dsl</span></code>
+* Example:</p>
+<blockquote>
+<div><ul class="simple">
+<li>One OpenFlow controller: &#8220;127.0.0.1&#8221;</li>
+<li><code class="docutils literal"><span class="pre">eth0</span></code>:  Management interface. (Thus does not appear in the configuration)</li>
+<li><code class="docutils literal"><span class="pre">eth1</span></code>, <code class="docutils literal"><span class="pre">eth2</span></code> are used as Lagopus dataplane port. These two port are accessed with raw-socket mode.</li>
+</ul>
+<div class="highlight-console"><div class="highlight"><pre><span></span><span class="gp">lagopus-kvm:~$</span> sudo vi /usr/local/etc/lagopus/lagopus.dsl
+<span class="go">channel channel01 create -dst-addr 127.0.0.1 -protocol tcp</span>
+<span class="go">controller controller01 create -channel channel01 -role equal -connection-type main</span>
+<span class="go">interface interface01 create -type ethernet-rawsock -device eth1</span>
+<span class="go">interface interface02 create -type ethernet-rawsock -device eth2</span>
+<span class="go">port port01 create -interface interface01</span>
+<span class="go">port port02 create -interface interface02</span>
+<span class="go">bridge bridge01 create -controller controller01 -port port01 1 -port port02 2 -dpid 0x1</span>
+<span class="go">bridge bridge01 enable</span>
+<span class="gp">lagopus-kvm:~$</span>
+</pre></div>
+</div>
+</div></blockquote>
+</li>
+<li><p class="first">Run Lagopus software switch</p>
+</li>
+<li><p class="first">Confirm two interfaces are recognized.</p>
+<div class="highlight-console"><div class="highlight"><pre><span></span><span class="gp">lagopus-kvm:~$</span> sudo lagopus
+<span class="gp">lagopus-kvm:~$</span> lagosh
+<span class="go">Lagosh&gt; show version</span>
+<span class="go">{</span>
+<span class="go">    &quot;product-name&quot;: &quot;Lagopus&quot;,</span>
+<span class="go">    &quot;version&quot;: &quot;0.2.2-release&quot;</span>
+<span class="go">}</span>
+<span class="go">Lagosh&gt;</span>
+<span class="go">Lagosh&gt; show interface</span>
+<span class="go">[</span>
+<span class="go">    {</span>
+<span class="go">        &quot;name&quot;: &quot;interface01&quot;,</span>
+<span class="go">        &quot;rx-dropped&quot;: 0,</span>
+<span class="go">        &quot;is-enabled&quot;: true,</span>
+<span class="go">        &quot;tx-errors&quot;: 0,</span>
+<span class="go">        &quot;rx-bytes&quot;: 0,</span>
+<span class="go">        &quot;tx-packets&quot;: 0,</span>
+<span class="go">        &quot;rx-packets&quot;: 0,</span>
+<span class="go">        &quot;tx-bytes&quot;: 0,</span>
+<span class="go">        &quot;rx-errors&quot;: 0,</span>
+<span class="go">        &quot;tx-dropped&quot;: 0</span>
+<span class="go">    },</span>
+<span class="go">    {</span>
+<span class="go">        &quot;name&quot;: &quot;interface02&quot;,</span>
+<span class="go">        &quot;rx-dropped&quot;: 0,</span>
+<span class="go">        &quot;is-enabled&quot;: true,</span>
+<span class="go">        &quot;tx-errors&quot;: 0,</span>
+<span class="go">        &quot;rx-bytes&quot;: 0,</span>
+<span class="go">        &quot;tx-packets&quot;: 0,</span>
+<span class="go">        &quot;rx-packets&quot;: 0,</span>
+<span class="go">        &quot;tx-bytes&quot;: 0,</span>
+<span class="go">        &quot;rx-errors&quot;: 0,</span>
+<span class="go">        &quot;tx-dropped&quot;: 0</span>
+<span class="go">    }</span>
+<span class="go">]</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">Stop Lagopus software switch and exit lagosh.</p>
+<div class="highlight-console"><div class="highlight"><pre><span></span><span class="go">Lagosh&gt; stop</span>
+<span class="go">Lagosh&gt; exit</span>
+<span class="gp">lagopus-kvm:~$</span>
+</pre></div>
+</div>
+</li>
+</ul>
+</div>
+</div>
+<div class="section" id="building-layer-2-switch-using-ryu-as-an-openflow-controller">
+<h2>5.6. Building Layer 2 switch using Ryu as an OpenFlow controller<a class="headerlink" href="#building-layer-2-switch-using-ryu-as-an-openflow-controller" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="setup-ryu-simple-switch">
+<h3>5.6.1. Setup Ryu Simple switch<a class="headerlink" href="#setup-ryu-simple-switch" title="Permalink to this headline">¶</a></h3>
+<ul>
+<li><p class="first">Install necessary packages.</p>
+</li>
+<li><p class="first">Use pip command and install Ryu.</p>
+<div class="highlight-console"><div class="highlight"><pre><span></span><span class="gp">lagopus-kvm:~$</span> sudo apt-get install python-setuptools python-pip python-dev <span class="se">\</span>
+<span class="go">  libxml2-dev libxslt-dev</span>
+<span class="gp">lagopus-kvm:~$</span> sudo pip install ryu
+</pre></div>
+</div>
+</li>
+<li><p class="first">Run below only if required.</p>
+<div class="highlight-console"><div class="highlight"><pre><span></span><span class="gp">lagopus-kvm:~$</span> sudo pip install oslo.config
+<span class="gp">lagopus-kvm:~$</span> sudo pip install six --upgrade
+</pre></div>
+</div>
+</li>
+<li><p class="first">Run simple_switch Ryu application.</p>
+<div class="highlight-console"><div class="highlight"><pre><span></span><span class="gp">lagopus-kvm:~$</span> ryu-manager --verbose /usr/local/lib/python2.7/dist-packages/ryu/app/simple_switch_13.py
+</pre></div>
+</div>
+</li>
+<li><p class="first">Open new SSH connection and run Lagopus software switch.</p>
+<div class="highlight-console"><div class="highlight"><pre><span></span><span class="gp">lagopus-kvm:~$</span> sudo lagopus
+</pre></div>
+</div>
+</li>
+<li><p class="first">Confirm Lagopus is connected to Ryu from ryu-manager console log.</p>
+<div class="highlight-console"><div class="highlight"><pre><span></span><span class="go">connected socket:&lt;eventlet.greenio.base.GreenSocket object at 0x7f9c71c1bb50&gt; address:(&#39;127.0.0.1&#39;, 35705)</span>
+<span class="go">hello ev &lt;ryu.controller.ofp_event.EventOFPHello object at 0x7f9c71bad1d0&gt;</span>
+<span class="go">move onto config mode</span>
+<span class="go">EVENT ofp_event-&gt;SimpleSwitch13 EventOFPSwitchFeatures</span>
+<span class="go">switch features ev version=0x4,msg_type=0x6,msg_len=0x20,xid=0xb0597afd,OFPSwitchFeatures(auxiliary_id=0,capabilities=79,datapath_id=1,n_buffers=65535,n_tables=255)</span>
+<span class="go">move onto main mode</span>
+</pre></div>
+</div>
+</li>
+</ul>
+</div>
+<div class="section" id="confirm-ping-works-via-lagopus-software-switch">
+<h3>5.6.2. Confirm ping works via Lagopus software switch<a class="headerlink" href="#confirm-ping-works-via-lagopus-software-switch" title="Permalink to this headline">¶</a></h3>
+<ul>
+<li><p class="first">On KVM host, ping between namespace host1/host2.</p>
+<div class="highlight-console"><div class="highlight"><pre><span></span><span class="gp">$</span> sudo ip netns <span class="nb">exec</span> host1 ping 10.0.0.2
+<span class="go">PING 10.0.0.2 (10.0.0.2) 56(84) bytes of data.</span>
+<span class="go">64 bytes from 10.0.0.2: icmp_seq=1 ttl=64 time=11.5 ms</span>
+<span class="go">64 bytes from 10.0.0.2: icmp_seq=2 ttl=64 time=0.745 ms</span>
+<span class="go">...</span>
+<span class="gp">$</span> sudo ip netns <span class="nb">exec</span> host2 ping 10.0.0.1
+<span class="go">PING 10.0.0.1 (10.0.0.1) 56(84) bytes of data.</span>
+<span class="go">64 bytes from 10.0.0.1: icmp_seq=1 ttl=64 time=0.770 ms</span>
+<span class="go">64 bytes from 10.0.0.1: icmp_seq=2 ttl=64 time=0.798 ms</span>
+<span class="go">...</span>
+</pre></div>
+</div>
+</li>
+</ul>
+</div>
+</div>
+</div>
+
+
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="cmd-options.html" class="btn btn-neutral float-right" title="6. Lagopus software switch command options and examples" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="installation-dpdk.html" class="btn btn-neutral" title="4. Installation with DPDK" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2016, NIPPON TELEGRAPH AND TELEPHONE CORPORATION.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'0.1.0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>
