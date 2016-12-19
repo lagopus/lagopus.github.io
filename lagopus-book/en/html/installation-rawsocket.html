@@ -155,7 +155,7 @@ If you want to enable &#8220;DPDK&#8221; for performance and scalability, please
 <div class="section" id="required-software-versions">
 <h2>3.1. Required software versions<a class="headerlink" href="#required-software-versions" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
-<li>Lagopus: <a class="reference external" href="https://github.com/lagopus/lagopus/releases/tag/v0.2.6">Lagopus software switch 0.2.6</a></li>
+<li>Lagopus: <a class="reference external" href="https://github.com/lagopus/lagopus/releases/tag/v0.2.10">Lagopus software switch 0.2.10</a></li>
 <li>Linux distribution: <a class="reference external" href="http://www.ubuntu.com/download/server">Ubuntu Server 16.04 LTS</a></li>
 </ul>
 </div>
@@ -174,15 +174,15 @@ If you want to enable &#8220;DPDK&#8221; for performance and scalability, please
 </div>
 </li>
 <li><p class="first">Download source code.</p>
-<div class="highlight-console"><div class="highlight"><pre><span></span><span class="gp">$</span> wget https://github.com/lagopus/lagopus/archive/v0.2.6.tar.gz
-<span class="gp">$</span> tar xvf v0.2.6.tar.gz
+<div class="highlight-console"><div class="highlight"><pre><span></span><span class="gp">$</span> wget https://github.com/lagopus/lagopus/archive/v0.2.10.tar.gz
+<span class="gp">$</span> tar xvf v0.2.10.tar.gz
 <span class="gp">$</span> ls
-<span class="go">lagopus-0.2.6  v0.2.6.tar.gz</span>
+<span class="go">lagopus-0.2.10  v0.2.10.tar.gz</span>
 <span class="gp">$</span>
 </pre></div>
 </div>
 <p>or</p>
-<div class="highlight-console"><div class="highlight"><pre><span></span><span class="gp">$</span> git clone --depth<span class="o">=</span><span class="m">1</span> -b v0.2.6 https://github.com/lagopus/lagopus.git
+<div class="highlight-console"><div class="highlight"><pre><span></span><span class="gp">$</span> git clone --depth<span class="o">=</span><span class="m">1</span> -b v0.2.10 https://github.com/lagopus/lagopus.git
 <span class="gp">$</span> ls
 <span class="go">lagopus</span>
 <span class="gp">$</span>
@@ -190,7 +190,7 @@ If you want to enable &#8220;DPDK&#8221; for performance and scalability, please
 </div>
 </li>
 <li><p class="first">Configure and compile Lagopus software switch with raw-socket mode option.</p>
-<div class="highlight-console"><div class="highlight"><pre><span></span><span class="gp">$</span> <span class="nb">cd</span> lagopus-0.2.6
+<div class="highlight-console"><div class="highlight"><pre><span></span><span class="gp">$</span> <span class="nb">cd</span> lagopus-0.2.10
 <span class="gp">$</span> ./configure --disable-dpdk
 <span class="gp">$</span> make
 </pre></div>
@@ -210,7 +210,7 @@ If you want to enable &#8220;DPDK&#8221; for performance and scalability, please
 <ul>
 <li><p class="first">Copy sample configuration file under <code class="docutils literal"><span class="pre">/usr/local/etc/lagopus/</span></code>.</p>
 <div class="highlight-console"><div class="highlight"><pre><span></span><span class="gp">$</span> sudo mkdir /usr/local/etc/lagopus/
-<span class="gp">$</span> <span class="nb">cd</span> ~/lagopus-0.2.6
+<span class="gp">$</span> <span class="nb">cd</span> ~/lagopus-0.2.10
 <span class="gp">$</span> sudo cp misc/examples/lagopus.dsl /usr/local/etc/lagopus/lagopus.dsl
 </pre></div>
 </div>
@@ -251,7 +251,7 @@ Enter <code class="docutils literal"><span class="pre">stop</span></code> comman
 <span class="go">Lagosh&gt; show version</span>
 <span class="go">{</span>
 <span class="go">    &quot;product-name&quot;: &quot;Lagopus&quot;,</span>
-<span class="go">    &quot;version&quot;: &quot;0.2.6-release&quot;</span>
+<span class="go">    &quot;version&quot;: &quot;0.2.10-release&quot;</span>
 <span class="go">}</span>
 <span class="go">Lagosh&gt; stop</span>
 <span class="go">Lagosh&gt; show version</span>

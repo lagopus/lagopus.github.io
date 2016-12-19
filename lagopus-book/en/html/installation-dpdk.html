@@ -183,7 +183,7 @@ If you want to run Lagopus with raw-socket configuration instead of DPDK-enabled
 <div class="section" id="software-versions">
 <h2>4.2. Software Versions<a class="headerlink" href="#software-versions" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
-<li>Lagopus : <a class="reference external" href="https://github.com/lagopus/lagopus/releases/tag/v0.2.6">Lagopus software switch 0.2.6</a></li>
+<li>Lagopus : <a class="reference external" href="https://github.com/lagopus/lagopus/releases/tag/v0.2.10">Lagopus software switch 0.2.10</a></li>
 <li>OS: <a class="reference external" href="http://www.ubuntu.com/download/server">Ubuntu Server 16.04 LTS</a></li>
 <li>DPDK: 2.2 or above</li>
 </ul>
@@ -203,15 +203,15 @@ If you want to run Lagopus with raw-socket configuration instead of DPDK-enabled
 </li>
 <li><p class="first">Download Lagopus source code.</p>
 <p>You have two options to get Lagopus source code by downloading tar file or by <code class="docutils literal"><span class="pre">git</span></code>.</p>
-<div class="highlight-console"><div class="highlight"><pre><span></span><span class="gp">$</span> wget https://github.com/lagopus/lagopus/archive/v0.2.6.tar.gz
-<span class="gp">$</span> tar xvf v0.2.6.tar.gz
+<div class="highlight-console"><div class="highlight"><pre><span></span><span class="gp">$</span> wget https://github.com/lagopus/lagopus/archive/v0.2.10.tar.gz
+<span class="gp">$</span> tar xvf v0.2.10.tar.gz
 <span class="gp">$</span> ls
-<span class="go">lagopus-0.2.6  v0.2.6.tar.gz</span>
+<span class="go">lagopus-0.2.10  v0.2.10.tar.gz</span>
 <span class="gp">$</span>
 </pre></div>
 </div>
 <p>Or</p>
-<div class="highlight-console"><div class="highlight"><pre><span></span><span class="gp">$</span> git clone -b v0.2.6 --recursive https://github.com/lagopus/lagopus.git
+<div class="highlight-console"><div class="highlight"><pre><span></span><span class="gp">$</span> git clone -b v0.2.10 --recursive https://github.com/lagopus/lagopus.git
 <span class="gp">$</span> ls
 <span class="go">lagopus</span>
 <span class="gp">$</span>
@@ -227,7 +227,7 @@ If you want to run Lagopus with raw-socket configuration instead of DPDK-enabled
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
 <p>If you find an error in configure process or make process, check git submodule setting. Sometimes git submodule operation may be failed due to firewall or proxy setting on your environment.</p>
-<div class="last highlight-console"><div class="highlight"><pre><span></span><span class="go">/home/&lt;usr&gt;/lagopus-0.2.6/mk/make_dpdk.sh /home/&lt;usr&gt;/lagopus-0.2.6 src/dpdk \</span>
+<div class="last highlight-console"><div class="highlight"><pre><span></span><span class="go">/home/&lt;usr&gt;/lagopus-0.2.10/mk/make_dpdk.sh /home/&lt;usr&gt;/lagopus-0.2.10 src/dpdk \</span>
 <span class="go">            &quot;x86_64&quot; &quot;linuxapp&quot; gcc</span>
 <span class="go">fatal: Not a git repository (or any of the parent directories): .git</span>
 <span class="go">make[1]: *** [dpdk] Error 1</span>
@@ -343,10 +343,10 @@ Perform the following steps to enable NICs for DPDK application.</p>
 </ul>
 </div>
 <ul>
-<li><p class="first">Check PCI ID of the NICs you want to use for DPDK with <code class="docutils literal"><span class="pre">dpdk_nic_bind.py</span></code> script.</p>
-<p><code class="docutils literal"><span class="pre">dpdk_nic_bind.py</span></code> script displays DPDK-enabled NIC information, such as PCI ID and interface name in Linux kernel.</p>
+<li><p class="first">Check PCI ID of the NICs you want to use for DPDK with <code class="docutils literal"><span class="pre">dpdk-devbind.py</span></code> script.</p>
+<p><code class="docutils literal"><span class="pre">dpdk-devbind.py</span></code> script displays DPDK-enabled NIC information, such as PCI ID and interface name in Linux kernel.</p>
 <div class="highlight-console"><div class="highlight"><pre><span></span><span class="gp">$</span> <span class="nb">cd</span> lagopus
-<span class="gp">$</span> sudo ./src/dpdk/tools/dpdk_nic_bind.py --status
+<span class="gp">$</span> sudo ./src/dpdk/tools/dpdk-devbind.py --status
 
 <span class="go">Network devices using DPDK-compatible driver</span>
 <span class="go">============================================</span>
@@ -396,9 +396,9 @@ Perform the following steps to enable NICs for DPDK application.</p>
 </li>
 <li><p class="first">Unbound NICs from ixgbe driver and registerd with igb_uio driver.</p>
 <blockquote>
-<div><p>Perform the dpdk_nic_bind with the PCI IDs to be unbounded from Linux kernel.</p>
-<div class="highlight-console"><div class="highlight"><pre><span></span><span class="go">~/lagopus$ sudo ./src/dpdk/tools/dpdk_nic_bind.py --bind=igb_uio 0000:00:08.0 0000:00:09.0</span>
-<span class="go">~/lagopus$ sudo ./src/dpdk/tools/dpdk_nic_bind.py --status</span>
+<div><p>Perform the dpdk-devbind with the PCI IDs to be unbounded from Linux kernel.</p>
+<div class="highlight-console"><div class="highlight"><pre><span></span><span class="go">~/lagopus$ sudo ./src/dpdk/tools/dpdk-devbind.py --bind=igb_uio 0000:00:08.0 0000:00:09.0</span>
+<span class="go">~/lagopus$ sudo ./src/dpdk/tools/dpdk-devbind.py --status</span>
 
 <span class="go">Network devices using DPDK-compatible driver</span>
 <span class="go">============================================</span>
@@ -469,7 +469,7 @@ Perform the following steps to enable NICs for DPDK application.</p>
 <ul>
 <li><p class="first">Copy sample configuration file under <code class="docutils literal"><span class="pre">/usr/local/etc/lagopus/</span></code>.</p>
 <div class="highlight-console"><div class="highlight"><pre><span></span><span class="gp">$</span> sudo mkdir /usr/local/etc/lagopus/
-<span class="gp">$</span> <span class="nb">cd</span> ~/lagopus-0.2.6
+<span class="gp">$</span> <span class="nb">cd</span> ~/lagopus-0.2.10
 <span class="gp">$</span> sudo cp misc/examples/lagopus.dsl /usr/local/etc/lagopus/lagopus.dsl
 </pre></div>
 </div>
@@ -588,7 +588,7 @@ With <code class="docutils literal"><span class="pre">-c</span></code> option, y
 <span class="go">Lagosh&gt; show version</span>
 <span class="go">{</span>
 <span class="go">    &quot;product-name&quot;: &quot;Lagopus&quot;,</span>
-<span class="go">    &quot;version&quot;: &quot;0.2.6-release&quot;</span>
+<span class="go">    &quot;version&quot;: &quot;0.2.10-release&quot;</span>
 <span class="go">}</span>
 <span class="go">Lagosh&gt; stop</span>
 <span class="go">Lagosh&gt; show version</span>
