@@ -1,0 +1,335 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>3. Lagopus version 0.2の振り返り &mdash; Design of Lagopus software switch rc0 ドキュメント</title>
+  
+
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+    <link rel="top" title="Design of Lagopus software switch rc0 ドキュメント" href="index.html"/>
+        <link rel="next" title="4. 次期LagopusのArchitecture" href="architecture.html"/>
+        <link rel="prev" title="2. Introduction" href="introduction.html"/> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="index.html" class="icon icon-home"> Design of Lagopus software switch
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.0.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="preface.html">1. About this book</a></li>
+<li class="toctree-l1"><a class="reference internal" href="introduction.html">2. Introduction</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">3. Lagopus version 0.2の振り返り</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#id1">3.1. 総括</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id2">3.2. 課題と改善点</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#agent">3.2.1. Agent系</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#dataplane">3.2.2. Dataplane系</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#datastore">3.2.3. Datastore系</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="architecture.html">4. 次期LagopusのArchitecture</a></li>
+<li class="toctree-l1"><a class="reference internal" href="dataplane.html">5. Software Dataplane</a></li>
+<li class="toctree-l1"><a class="reference internal" href="routingos.html">6. Routing OS</a></li>
+<li class="toctree-l1"><a class="reference internal" href="usecase.html">7. 適応先</a></li>
+<li class="toctree-l1"><a class="reference internal" href="roadmap.html">8. 開発ロードマップ</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="index.html">Design of Lagopus software switch</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+ 
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="index.html">Docs</a> &raquo;</li>
+      
+    <li>3. Lagopus version 0.2の振り返り</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="_sources/review.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="lagopus-version-0-2">
+<span id="ref-review"></span><h1>3. Lagopus version 0.2の振り返り<a class="headerlink" href="#lagopus-version-0-2" title="このヘッドラインへのパーマリンク">¶</a></h1>
+<p>次期Lagopus software switchの設計や開発にむけて, 2016年度まで開発したLagopus software switchの総括と課題を記述する．</p>
+<p>Lagopus 0.2の全体のアーキテクチャを以下の図に示す．</p>
+<img alt="_images/Lagopus-0.2-architecture.png" src="_images/Lagopus-0.2-architecture.png" />
+<p>Lagopus version 0.2では，DatastoreがLagopusの設定情報や資源情報を管理し，各コンポーネントやモジュールの統合管理を行っている．</p>
+<div class="section" id="id1">
+<h2>3.1. 総括<a class="headerlink" href="#id1" title="このヘッドラインへのパーマリンク">¶</a></h2>
+<ul class="simple">
+<li>OpenFlow 1.3に最も適合したソフトウエアスイッチ実装<ul>
+<li>OpenFlowの拡張に柔軟なOpenFlow agent実装<ul>
+<li>新しいOpenFlow protocolへの拡張の容易さ</li>
+</ul>
+</li>
+<li>複数プロトコルフォーマットに対応したdataplane実装<ul>
+<li>新しいプロトコルフォーマットに柔軟なOpenFlow protocolへの拡張の容易さ</li>
+<li>Tunnelプロトコルへの拡張の容易さ</li>
+<li>OF normal処理が可能なHybridデータプレーン構成</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>DPDKを活用した高速なdataplane (Fast-path)実装<ul>
+<li>20MPPS級のパケット転送・処理</li>
+<li>マルチコアが活用可能</li>
+<li>Flow cache機構によるフロー検索・処理のバイパス</li>
+<li>OSのNW stackと連携可能なL2/L3機能 (OF normal処理時)</li>
+<li>OSへのイベント・パケット処理・制御エスカレーション機構</li>
+</ul>
+</li>
+<li>スイッチ設定管理系 (Datastore) を中心にしたスイッチの統合資源管理<ul>
+<li>スイッチ設定言語による柔軟な設定<ul>
+<li>差分情報の通知</li>
+<li>情報の永続化機能</li>
+<li>情報のvalidation</li>
+<li>設定のRoll-back機能</li>
+<li>Atomicな設定操作</li>
+</ul>
+</li>
+<li>各モジュールの管理</li>
+<li>設定情報管理とcall-backによる各モジュールの制御管理</li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="section" id="id2">
+<h2>3.2. 課題と改善点<a class="headerlink" href="#id2" title="このヘッドラインへのパーマリンク">¶</a></h2>
+<div class="section" id="agent">
+<h3>3.2.1. Agent系<a class="headerlink" href="#agent" title="このヘッドラインへのパーマリンク">¶</a></h3>
+<ul class="simple">
+<li>プロトコル制御との連携IFがDSLとOpenFlowのみ</li>
+<li>プロプラなRouting OSやオープンソースのRouting OSと連携させたい</li>
+<li>プロトコル制御向け (slow-path) のパケットやイベントエスカレーションの改善<ul>
+<li>現時点ではOpenFlow agentへのエスカレーションパスのみ<ul>
+<li>DPDK port -&gt; 対応するtap -&gt; パケット処理 -&gt; tap -&gt; 対応するDPDK port</li>
+</ul>
+</li>
+<li>プロトコル制御向から送られた制御パケットもTapからの出力のみ<ul>
+<li>OpenFlowにおけるpacket-out的な扱いがしたい</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="section" id="dataplane">
+<h3>3.2.2. Dataplane系<a class="headerlink" href="#dataplane" title="このヘッドラインへのパーマリンク">¶</a></h3>
+<ul class="simple">
+<li>L2以外の終端機能が弱い<ul>
+<li>L3やTunnel処理のための追加機能が必要</li>
+<li>IPsecへの対応がOFの拡張としては難しい</li>
+</ul>
+</li>
+<li>プロトコルに特化したLookupとアクションがほしい<ul>
+<li>OpenFlow full-featureでの処理は重い</li>
+<li>Ingressとegressに分けて処理するように変更<ul>
+<li>プロトコルに特化してテーブル構成を変更したい<ul>
+<li>プロトコル制御と連携するデータプレーンのlookup領域やaction領域を変更可能</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Pipeliner<ul>
+<li>性能を出すための処理単位が大きすぎる</li>
+<li>各pipeline stageの処理の重さが調整出来ない</li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="section" id="datastore">
+<h3>3.2.3. Datastore系<a class="headerlink" href="#datastore" title="このヘッドラインへのパーマリンク">¶</a></h3>
+<ul class="simple">
+<li>管理系のIFはDSLのみに限定<ul>
+<li>APIやRPCにより制御・設定可能にしたい</li>
+</ul>
+</li>
+<li>Datastoreの拡張性が低い<ul>
+<li>Bridge配下の肥大化<ul>
+<li>単純化したい<ul>
+<li>作用・副作用点</li>
+<li>スイッチ情報モデルが複雑化，モデルを再整理した方がよい</li>
+</ul>
+</li>
+<li>揮発的な情報と不揮発情報に分けた情報管理</li>
+</ul>
+</li>
+<li>DSLとDatastoreが密結合<ul>
+<li>DSLが中心になって各コンポーネントを制御している方法を改良したい</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+</div>
+
+
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="architecture.html" class="btn btn-neutral float-right" title="4. 次期LagopusのArchitecture" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="introduction.html" class="btn btn-neutral" title="2. Introduction" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2016, Lagopus project.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'rc0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+      <script type="text/javascript" src="_static/translations.js"></script>
+      <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

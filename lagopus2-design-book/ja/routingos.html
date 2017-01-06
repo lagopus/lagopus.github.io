@@ -1,0 +1,299 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>6. Routing OS &mdash; Design of Lagopus software switch rc0 ドキュメント</title>
+  
+
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+    <link rel="top" title="Design of Lagopus software switch rc0 ドキュメント" href="index.html"/>
+        <link rel="next" title="7. 適応先" href="usecase.html"/>
+        <link rel="prev" title="5. Software Dataplane" href="dataplane.html"/> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="index.html" class="icon icon-home"> Design of Lagopus software switch
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.0.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="preface.html">1. About this book</a></li>
+<li class="toctree-l1"><a class="reference internal" href="introduction.html">2. Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="review.html">3. Lagopus version 0.2の振り返り</a></li>
+<li class="toctree-l1"><a class="reference internal" href="architecture.html">4. 次期LagopusのArchitecture</a></li>
+<li class="toctree-l1"><a class="reference internal" href="dataplane.html">5. Software Dataplane</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">6. Routing OS</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#id1">6.1. 前提</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#tap">6.2. Tapによるイベントのエスカレーション</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id2">6.3. Routing OSとの連携</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#ipsec-agent">6.4. IPsec Agentとの連携</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="usecase.html">7. 適応先</a></li>
+<li class="toctree-l1"><a class="reference internal" href="roadmap.html">8. 開発ロードマップ</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="index.html">Design of Lagopus software switch</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+ 
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="index.html">Docs</a> &raquo;</li>
+      
+    <li>6. Routing OS</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="_sources/routingos.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="routing-os">
+<span id="ref-routingos"></span><h1>6. Routing OS<a class="headerlink" href="#routing-os" title="このヘッドラインへのパーマリンク">¶</a></h1>
+<p>プロトコル処理を行うRouting OSについて記述する．</p>
+<div class="section" id="id1">
+<h2>6.1. 前提<a class="headerlink" href="#id1" title="このヘッドラインへのパーマリンク">¶</a></h2>
+<ul class="simple">
+<li>Routing OSのプロセスはユーザースペース実装<ul>
+<li>一部制御・機能はKernel空間でも実現<ul>
+<li>ARP, Tunnel terminationなど</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Routing OSはOSのkernel機能の活用<ul>
+<li>Kernelが管理するnetwork interface情報を活用</li>
+<li>kernelが提供するTCPやUDP終端機能の上で動作するsocketを用いて対向との通信が可能</li>
+</ul>
+</li>
+<li>Routing OSはソフトウエアスイッチの制御はスイッチのAPI経由で実施<ul>
+<li>C API or RPC 経由の処理</li>
+</ul>
+</li>
+<li>Routing OSへのイベントやパケットのエスカレーションはtap IFもしくはQueueにより実施</li>
+</ul>
+</div>
+<div class="section" id="tap">
+<h2>6.2. Tapによるイベントのエスカレーション<a class="headerlink" href="#tap" title="このヘッドラインへのパーマリンク">¶</a></h2>
+<p>LinuxやBSDのカーネルに実装されたネットワークスタックや，ユーザースペースに実装されたルーティングを活用するために，
+データプレーンからシグナリングや制御に用いられるパケットをOS側にエスカレーションする機能を提供する．</p>
+<p>エスカレーションのために，OS側に汎用仮想インタフェースであるtapを生成し，
+データプレーンの特定のプロトコル処理部と生成したtapインタフェースを接続し，該当パケットを書き込む．
+また，ルーティングスタックからの送出のために逆向きの処理も合わせて行う．</p>
+</div>
+<div class="section" id="id2">
+<h2>6.3. Routing OSとの連携<a class="headerlink" href="#id2" title="このヘッドラインへのパーマリンク">¶</a></h2>
+<img alt="_images/routing-os.png" src="_images/routing-os.png" />
+<p>ルータの情報モデルはOpenconfigdから，内部の情報モデルを生成し，設定のAPIも同様に生成する．
+RIB (Routing Information Base), FIB (Forwarding Information Base), LIB (Label Information Base),
+TIB (Tunnel Information Base), Adjacency tableを保持し， 各プロトコルからの制御を統合的に管理するものとする．</p>
+<p>Routing OS内部には設定情報を管理するコンポーネントと，内部のイベント情報の転送や処理を実施するEvent message busを用意し，複数のプロトコル制御に対応する．</p>
+<p>データプレーンへの制御についてはRouting OSからのAPI (RPC) の実行により実施する．</p>
+</div>
+<div class="section" id="ipsec-agent">
+<h2>6.4. IPsec Agentとの連携<a class="headerlink" href="#ipsec-agent" title="このヘッドラインへのパーマリンク">¶</a></h2>
+<ul class="simple">
+<li>IKE処理としてstrongSwanを利用する<ul>
+<li>FreeS/WANから派生したOpenswan，strongSwanを比較すると，strongSwanの方が頻繁にメンテされている</li>
+</ul>
+</li>
+<li>IKE処理をstrongSwanで実施し，Lagopusでデータプレーン処理(ESP，AH)を実施<ul>
+<li>strongSwanでIKEv1/2による接続先との鍵交換を行い，SADを生成/更新</li>
+<li>RPCでstrongSwanのSADとLagopusのSADを同期</li>
+<li>Lagopusは同期されたSADを利用してデータプレーン処理を実施</li>
+</ul>
+</li>
+<li>(調査中)strongSwanとRPCの接続方法<ul>
+<li>VICIを用いる手法と，pluginの枠組みを使う方法がある</li>
+<li>VICI (Versatile IKE Control Interface)<ul>
+<li>strongSwanのkeying daemonであるcharotを制御するためのIPCプロトコル</li>
+<li>charotのコマンドラインインターフェースであるswanctlもこのVICIを利用している</li>
+<li>Cのclient libraryとしてlibviciがある</li>
+<li>VICIを利用してSADを取得できそう<ul>
+<li>但し，SAD全体の取得しかできない可能性がある</li>
+<li>またcharot側からのイベント通知の仕組みがあるが，SAD更新のイベント通知が無いかもしれず，ポーリングが必要となる可能性あり</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>plugin<ul>
+<li>strongSwanのIPsecバックエンドは，pluginとして実装されている<ul>
+<li>kernel_netlink: デフォルトのLinuxカーネルを利用するバックエンド</li>
+<li>kernel_libipsec: ユーザースペース実装のバックエンド</li>
+</ul>
+</li>
+<li>pluginとして，バックエンドの各機能をコールバックとしてstrongSwanに登録，これによりSAを取得可能<ul>
+<li>例えばSAが追加された場合にadd_sa()が呼ばれ，SAの情報が取得できるものと思われる</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+
+
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="usecase.html" class="btn btn-neutral float-right" title="7. 適応先" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="dataplane.html" class="btn btn-neutral" title="5. Software Dataplane" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2016, Lagopus project.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'rc0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+      <script type="text/javascript" src="_static/translations.js"></script>
+      <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

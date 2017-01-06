@@ -1,0 +1,785 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>4. 次期LagopusのArchitecture &mdash; Design of Lagopus software switch rc0 ドキュメント</title>
+  
+
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+    <link rel="top" title="Design of Lagopus software switch rc0 ドキュメント" href="index.html"/>
+        <link rel="next" title="5. Software Dataplane" href="dataplane.html"/>
+        <link rel="prev" title="3. Lagopus version 0.2の振り返り" href="review.html"/> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="index.html" class="icon icon-home"> Design of Lagopus software switch
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.0.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="preface.html">1. About this book</a></li>
+<li class="toctree-l1"><a class="reference internal" href="introduction.html">2. Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="review.html">3. Lagopus version 0.2の振り返り</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">4. 次期LagopusのArchitecture</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#id1">4.1. 全体的な方針</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id2">4.2. 改善の方針</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id3">4.3. スイッチを構成する代表的なコンポーネント</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#datastore">4.3.1. Datastore</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#dataplane">4.3.2. Dataplane</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#event-message-bus">4.3.3. Event Message Bus</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#openflow-agent">4.3.4. OpenFlow agent</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#routing-os">4.3.5. Routing OS</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#id4">4.4. 構成情報の設定のフローについて</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#id5">4.4.1. 揮発性の設定情報について</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id6">4.4.2. 不揮発性の設定情報について</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#id7">4.5. 具体的な制御の流れ</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#id8">4.5.1. 各コンポーネントのスキーマの登録</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#bridge">4.5.2. Bridgeの設定 (不揮発性情報の扱い)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#ip-route">4.5.3. IP route情報の設定 (揮発性情報の扱い)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id9">4.5.4. 統計情報の取得 (揮発性情報の扱い)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="dataplane.html">5. Software Dataplane</a></li>
+<li class="toctree-l1"><a class="reference internal" href="routingos.html">6. Routing OS</a></li>
+<li class="toctree-l1"><a class="reference internal" href="usecase.html">7. 適応先</a></li>
+<li class="toctree-l1"><a class="reference internal" href="roadmap.html">8. 開発ロードマップ</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="index.html">Design of Lagopus software switch</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+ 
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="index.html">Docs</a> &raquo;</li>
+      
+    <li>4. 次期LagopusのArchitecture</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="_sources/architecture.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="lagopusarchitecture">
+<span id="ref-architecture"></span><h1>4. 次期LagopusのArchitecture<a class="headerlink" href="#lagopusarchitecture" title="このヘッドラインへのパーマリンク">¶</a></h1>
+<div class="section" id="id1">
+<h2>4.1. 全体的な方針<a class="headerlink" href="#id1" title="このヘッドラインへのパーマリンク">¶</a></h2>
+<ul class="simple">
+<li>マイクロサービス化をすすめる<ul>
+<li>Lagopusを構成するパケット処理部，構成情報管理機構，プロトコルエージェントを疎結合で接続<ul>
+<li>各コンポーネントの設定の方法については全体で統一的なルールを適用することにする</li>
+<li>各コンポーネントのAPI呼び出しAuthorizationが必要な場合は別途用意する</li>
+<li>統一的なルール以外による設定はサポートしない</li>
+</ul>
+</li>
+<li>監視プロセスやHigh-Availability機能については外部システムで対処<ul>
+<li>コンポーネントで異常が発生した場合は，アラートを上げそれ以外のコンポーネントは処理を継続</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>プロトコル処理志向のプログラマブルなパケット処理を実現<ul>
+<li>APIによりデータプレーンの処理フローを選択可能</li>
+<li>プロトコル処理制御用のAPIをプロトコルごとに提供</li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="section" id="id2">
+<h2>4.2. 改善の方針<a class="headerlink" href="#id2" title="このヘッドラインへのパーマリンク">¶</a></h2>
+<img alt="_images/lagopus-architecture.png" src="_images/lagopus-architecture.png" />
+<ul class="simple">
+<li>DatastoreのLagopus設定ファイル管理とObject情報管理を分離<ul>
+<li>Lagopus設定ファイル管理: 設定情報の読み込みと永続化に特化</li>
+<li>Object情報管理: 各オブジェクトの情報管理と各コンポーネントへの通知処理<ul>
+<li>データのスキーマ管理とValidationの管理<ul>
+<li>データスキーマ情報からのAPI生成</li>
+<li>YANGモデルをスキーマとして活用</li>
+<li>Openconfigdをベースに拡張したデータモデルを定義</li>
+</ul>
+</li>
+<li>外部から指定されたあるデータベースのテーブル，カラムやセルなどへのアクセスなどをトリガーにして通知</li>
+<li>設定情報についてはトランザクション処理を実現するためcurrent, nextの2面を保持</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>各コンポーネント間の通信や制御の疎結合化<ul>
+<li>各コンポーネントおける制御メッセージ処理部の導入<ul>
+<li>各コンポーネントにイベントレシーバとディスパッチャの導入</li>
+<li>各コンポーネントの制御はAPIもしくはオブジェクト情報の通知により各コンポーネントの設定を行う</li>
+<li>各コンポーネントが使用する構成情報はDatastoreのObject情報管理に登録し，値の変更をトリガーにして情報が通知</li>
+<li>各コンポーネントは内部でcurrent, nextの構成情報を持ち，トランザクション処理に対応 (構成状態を二面持てない場合も考慮)</li>
+</ul>
+</li>
+<li>各コンポーネント間でのイベントメッセージ転送部の導入<ul>
+<li>上位のRouting OSなどに対してエスカレーションするイベントを転送する機能を導入<ul>
+<li>Linkup/downなどのイベント通知</li>
+</ul>
+</li>
+<li>低レイテンシ，高速性，スケーラビリティの重視</li>
+<li>1:Nの通信 (pub/sub系)</li>
+</ul>
+</li>
+<li>機能分離と統合的なプロセス管理<ul>
+<li>各コンポーネントの死活監視</li>
+<li>異常時に各コンポーネントレベルでプロセスの再起動が可能</li>
+<li>各コンポーネントレベルでの分離</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>各コンポーネント間の通信手段を提供<ul>
+<li>IF設定などの制御<ul>
+<li>通信の信頼性重視</li>
+<li>1:1の通信</li>
+<li>Two-phase commitベースによる分散トランザクションの実行<ul>
+<li>Prepare phase: 設定情報のvalidation</li>
+<li>commit phase: 設定情報の反映</li>
+</ul>
+</li>
+<li>フロー設定などの高速性</li>
+</ul>
+</li>
+<li>制御を行うためのコンポーネントやAPI接続に関する接続情報の管理</li>
+</ul>
+</li>
+<li>Dataplaneのルータ機能への対応<ul>
+<li>プロトコルに特化した処理を実現するために拡張<ul>
+<li>各プロトコルエージェントへイベントやパケットをエスカレーション機能</li>
+<li>エージェントからのプロトコルを意識したパケット送出機能を追加</li>
+<li>RIB, LIB, TIB, FIB, adjacency table管理の追加</li>
+<li>NATなどの機能のためにlocal key/value in-memory databaseを追加</li>
+<li>パケット処理instructionへのinstruction template機能の追加</li>
+</ul>
+</li>
+<li>IPsec処理部とその設定APIの追加</li>
+<li>ステータス同期マネージメント機構の導入</li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="section" id="id3">
+<h2>4.3. スイッチを構成する代表的なコンポーネント<a class="headerlink" href="#id3" title="このヘッドラインへのパーマリンク">¶</a></h2>
+<div class="section" id="datastore">
+<h3>4.3.1. Datastore<a class="headerlink" href="#datastore" title="このヘッドラインへのパーマリンク">¶</a></h3>
+<ul class="simple">
+<li>構成情報のデータベース機能<ul>
+<li>永続化機構</li>
+<li>データの変更の通知機構</li>
+<li>トランザクション機能</li>
+</ul>
+</li>
+<li>構成情報のデータスキーマ機能</li>
+<li>制御のためのAPI接続情報管理</li>
+</ul>
+</div>
+<div class="section" id="dataplane">
+<h3>4.3.2. Dataplane<a class="headerlink" href="#dataplane" title="このヘッドラインへのパーマリンク">¶</a></h3>
+<ul class="simple">
+<li>パケット転送・処理<ul>
+<li>プロトコルに特化したフロー検索，パケット処理</li>
+<li>処理オフロードへの対応</li>
+</ul>
+</li>
+<li>パケット処理パイプラインの構成管理</li>
+<li>カウンターや統計データのエキスポート</li>
+</ul>
+</div>
+<div class="section" id="event-message-bus">
+<h3>4.3.3. Event Message Bus<a class="headerlink" href="#event-message-bus" title="このヘッドラインへのパーマリンク">¶</a></h3>
+<ul class="simple">
+<li>各コンポーネントから送出されるイベント通知機構<ul>
+<li>イベント毎のpub/sub管理を行う</li>
+<li>速度やスケーラビリティを重視</li>
+<li>再送処理は必要ない</li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="section" id="openflow-agent">
+<h3>4.3.4. OpenFlow agent<a class="headerlink" href="#openflow-agent" title="このヘッドラインへのパーマリンク">¶</a></h3>
+<ul class="simple">
+<li>OpenFlow Protocolのエージェント機能<ul>
+<li>OpenFlow 1.3の解釈とDataplaneへの制御</li>
+<li>Dataplaneからのpacket-inとControllerからのpacket-out機能</li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="section" id="routing-os">
+<h3>4.3.5. Routing OS<a class="headerlink" href="#routing-os" title="このヘッドラインへのパーマリンク">¶</a></h3>
+<ul class="simple">
+<li>プロトコル処理制御<ul>
+<li>L2, L3, L4の制御</li>
+<li>APIを用いてデータプレーンを制御</li>
+<li>APIを用いて統計データを取得</li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div class="section" id="id4">
+<h2>4.4. 構成情報の設定のフローについて<a class="headerlink" href="#id4" title="このヘッドラインへのパーマリンク">¶</a></h2>
+<p>資源の活性化や初期化などを要するシステムの構成管理などの不揮発性の情報については，Two-phase commitを基本とする．
+Flow-entryなどの上位のRouting OSが再設定可能な情報に対しては即時commitを行う．</p>
+<p>構成情報の項目は以下のとおり</p>
+<ul class="simple">
+<li>Dataplaneの構成情報<ul>
+<li>I/OやCPUの割当</li>
+<li>Port番号</li>
+<li>Agent情報</li>
+<li>Queue構成</li>
+<li>プロトコル処理パイプライン</li>
+</ul>
+</li>
+<li>OpenFlowの構成情報<ul>
+<li>Controllerの設定</li>
+<li>Version情報</li>
+</ul>
+</li>
+<li>Routing OS接続情報<ul>
+<li>L2, L3の制御情報</li>
+</ul>
+</li>
+<li>ログの設定</li>
+</ul>
+<div class="section" id="id5">
+<h3>4.4.1. 揮発性の設定情報について<a class="headerlink" href="#id5" title="このヘッドラインへのパーマリンク">¶</a></h3>
+<ul>
+<li><p class="first">即時commitを実施</p>
+<blockquote>
+<div><ul class="simple">
+<li>依頼先側がエラーを依頼側に伝え，依頼側の責任で管理</li>
+</ul>
+</div></blockquote>
+</li>
+</ul>
+</div>
+<div class="section" id="id6">
+<h3>4.4.2. 不揮発性の設定情報について<a class="headerlink" href="#id6" title="このヘッドラインへのパーマリンク">¶</a></h3>
+<ul class="simple">
+<li>Two-phase commitを実施<ul>
+<li>Validationで失敗<ul>
+<li>依頼先側がエラーを依頼側に伝え，依頼側の責任で管理</li>
+</ul>
+</li>
+<li>commitで失敗<ul>
+<li>依頼先側がエラーを依頼側に伝え，前の状態に戻す，softに戻せない場合には前のパラメータで初期化</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div class="section" id="id7">
+<h2>4.5. 具体的な制御の流れ<a class="headerlink" href="#id7" title="このヘッドラインへのパーマリンク">¶</a></h2>
+<div class="section" id="id8">
+<h3>4.5.1. 各コンポーネントのスキーマの登録<a class="headerlink" href="#id8" title="このヘッドラインへのパーマリンク">¶</a></h3>
+<div><svg height="954" viewBox="0 0 640 954" width="640" xmlns="http://www.w3.org/2000/svg" xmlns:inkspace="http://www.inkscape.org/namespaces/inkscape" xmlns:xlink="http://www.w3.org/1999/xlink">
+  <defs id="defs_block">
+    <filter height="1.504" id="filter_blur" inkspace:collect="always" width="1.1575" x="-0.07875" y="-0.252">
+      <feGaussianBlur id="feGaussianBlur3780" inkspace:collect="always" stdDeviation="4.2" />
+    </filter>
+  </defs>
+  <title>blockdiag</title>
+  <desc />
+  <rect fill="rgb(0,0,0)" height="40" stroke="rgb(0,0,0)" style="filter:url(#filter_blur);opacity:0.7;fill-opacity:1" width="128" x="67" y="46" />
+  <rect fill="rgb(0,0,0)" height="40" stroke="rgb(0,0,0)" style="filter:url(#filter_blur);opacity:0.7;fill-opacity:1" width="128" x="259" y="46" />
+  <rect fill="rgb(0,0,0)" height="40" stroke="rgb(0,0,0)" style="filter:url(#filter_blur);opacity:0.7;fill-opacity:1" width="128" x="451" y="46" />
+  <path d="M 128 80 L 128 942" fill="none" stroke="rgb(0,0,0)" stroke-dasharray="8 4" />
+  <path d="M 320 80 L 320 942" fill="none" stroke="rgb(0,0,0)" stroke-dasharray="8 4" />
+  <path d="M 512 80 L 512 942" fill="none" stroke="rgb(0,0,0)" stroke-dasharray="8 4" />
+  <rect fill="rgb(255,255,255)" height="40" stroke="rgb(0,0,0)" width="128" x="64" y="40" />
+  <text fill="rgb(0,0,0)" font-family="sans-serif" font-size="11" font-style="normal" font-weight="normal" text-anchor="middle" textLength="36" x="128" y="66">Client</text>
+  <rect fill="rgb(255,255,255)" height="40" stroke="rgb(0,0,0)" width="128" x="256" y="40" />
+  <text fill="rgb(0,0,0)" font-family="sans-serif" font-size="11" font-style="normal" font-weight="normal" text-anchor="middle" textLength="54" x="320" y="66">Datastore</text>
+  <rect fill="rgb(255,255,255)" height="40" stroke="rgb(0,0,0)" width="128" x="448" y="40" />
+  <text fill="rgb(0,0,0)" font-family="sans-serif" font-size="11" font-style="normal" font-weight="normal" text-anchor="middle" textLength="54" x="512" y="66">Dataplane</text>
+  <path d="M 328 135 L 504 135" fill="none" stroke="rgb(0,0,0)" />
+  <polygon fill="rgb(0,0,0)" points="336,131 328,135 336,139" stroke="rgb(0,0,0)" />
+  <path d="M 328 200 L 504 200" fill="none" stroke="rgb(0,0,0)" />
+  <polygon fill="rgb(0,0,0)" points="496,196 504,200 496,204" stroke="rgb(0,0,0)" />
+  <path d="M 136 265 L 312 265" fill="none" stroke="rgb(0,0,0)" />
+  <polygon fill="rgb(0,0,0)" points="304,261 312,265 304,269" stroke="rgb(0,0,0)" />
+  <path d="M 136 330 L 312 330" fill="none" stroke="rgb(0,0,0)" />
+  <polygon fill="rgb(0,0,0)" points="144,326 136,330 144,334" stroke="rgb(0,0,0)" />
+  <path d="M 328 475 L 504 475" fill="none" stroke="rgb(0,0,0)" />
+  <polygon fill="rgb(0,0,0)" points="336,471 328,475 336,479" stroke="rgb(0,0,0)" />
+  <path d="M 328 540 L 504 540" fill="none" stroke="rgb(0,0,0)" />
+  <polygon fill="rgb(0,0,0)" points="496,536 504,540 496,544" stroke="rgb(0,0,0)" />
+  <path d="M 136 605 L 312 605" fill="none" stroke="rgb(0,0,0)" />
+  <polygon fill="rgb(0,0,0)" points="304,601 312,605 304,609" stroke="rgb(0,0,0)" />
+  <path d="M 136 670 L 312 670" fill="none" stroke="rgb(0,0,0)" />
+  <polygon fill="rgb(0,0,0)" points="144,666 136,670 144,674" stroke="rgb(0,0,0)" />
+  <path d="M 328 815 L 504 815" fill="none" stroke="rgb(0,0,0)" />
+  <polygon fill="rgb(0,0,0)" points="496,811 504,815 496,819" stroke="rgb(0,0,0)" />
+  <path d="M 136 880 L 312 880" fill="none" stroke="rgb(0,0,0)" />
+  <polygon fill="rgb(0,0,0)" points="144,876 136,880 144,884" stroke="rgb(0,0,0)" />
+  <text fill="rgb(0,0,0)" font-family="sans-serif" font-size="11" font-style="normal" font-weight="normal" text-anchor="middle" textLength="114" x="447" y="133">schema registration</text>
+  <text fill="rgb(0,0,0)" font-family="sans-serif" font-size="11" font-style="normal" font-weight="normal" text-anchor="middle" textLength="132" x="398" y="198">schema registration OK</text>
+  <text fill="rgb(0,0,0)" font-family="sans-serif" font-size="11" font-style="normal" font-weight="normal" text-anchor="middle" textLength="114" x="197" y="263">schema registration</text>
+  <text fill="rgb(0,0,0)" font-family="sans-serif" font-size="11" font-style="normal" font-weight="normal" text-anchor="middle" textLength="132" x="246" y="328">schema registration OK</text>
+  <text fill="rgb(0,0,0)" font-family="sans-serif" font-size="11" font-style="normal" font-weight="normal" text-anchor="middle" textLength="132" x="438" y="473">watch request (bridge)</text>
+  <text fill="rgb(0,0,0)" font-family="sans-serif" font-size="11" font-style="normal" font-weight="normal" text-anchor="middle" textLength="150" x="407" y="538">watch request (bridge) OK</text>
+  <text fill="rgb(0,0,0)" font-family="sans-serif" font-size="11" font-style="normal" font-weight="normal" text-anchor="middle" textLength="132" x="206" y="603">watch request (bridge)</text>
+  <text fill="rgb(0,0,0)" font-family="sans-serif" font-size="11" font-style="normal" font-weight="normal" text-anchor="middle" textLength="150" x="237" y="668">watch request (bridge) OK</text>
+  <text fill="rgb(0,0,0)" font-family="sans-serif" font-size="11" font-style="normal" font-weight="normal" text-anchor="middle" textLength="90" x="377" y="813">notify (bridge)</text>
+  <text fill="rgb(0,0,0)" font-family="sans-serif" font-size="11" font-style="normal" font-weight="normal" text-anchor="middle" textLength="90" x="267" y="878">notify (bridge)</text>
+  <path d="M 40 397 L 235 397" fill="none" stroke="rgb(0,0,0)" />
+  <path d="M 40 401 L 235 401" fill="none" stroke="rgb(0,0,0)" />
+  <path d="M 405 397 L 600 397" fill="none" stroke="rgb(0,0,0)" />
+  <path d="M 405 401 L 600 401" fill="none" stroke="rgb(0,0,0)" />
+  <rect fill="rgb(208,208,208)" height="19" stroke="rgb(0,0,0)" width="170" x="235" y="390" />
+  <text fill="rgb(0,0,0)" font-family="sans-serif" font-size="11" font-style="normal" font-weight="normal" text-anchor="middle" textLength="150" x="320" y="405">After schema registration</text>
+  <path d="M 40 737 L 214 737" fill="none" stroke="rgb(0,0,0)" />
+  <path d="M 40 741 L 214 741" fill="none" stroke="rgb(0,0,0)" />
+  <path d="M 426 737 L 600 737" fill="none" stroke="rgb(0,0,0)" />
+  <path d="M 426 741 L 600 741" fill="none" stroke="rgb(0,0,0)" />
+  <rect fill="rgb(208,208,208)" height="19" stroke="rgb(0,0,0)" width="212" x="214" y="730" />
+  <text fill="rgb(0,0,0)" font-family="sans-serif" font-size="11" font-style="normal" font-weight="normal" text-anchor="middle" textLength="192" x="320" y="745">After bridge configuration event</text>
+</svg>
+</div>
+<ol class="arabic simple">
+<li>スキーマの登録<ol class="arabic">
+<li>DataplaneからDatastoreにスキーマ登録</li>
+<li>ClientからDatastoreにスキーマ登録</li>
+</ol>
+</li>
+<li>APIの登録<ol class="arabic">
+<li>DataplaneのAPI接続の登録</li>
+<li>Dataplaneがbridgeに関する構成情報の変化通知に関する発行要求</li>
+<li>ClientへのAPI接続の登録</li>
+<li>Dataplaneがbridgeに関する構成情報の変化通知に関する発行要求</li>
+</ol>
+</li>
+<li>データ変更の通知<ol class="arabic">
+<li>Dataplaneへbridgeに関するデータ変更を通知</li>
+<li>Clientへbridgeに関するデータ変更を通知</li>
+</ol>
+</li>
+</ol>
+</div>
+<div class="section" id="bridge">
+<h3>4.5.2. Bridgeの設定 (不揮発性情報の扱い)<a class="headerlink" href="#bridge" title="このヘッドラインへのパーマリンク">¶</a></h3>
+<div><svg height="1422" viewBox="0 0 722 1422" width="722" xmlns="http://www.w3.org/2000/svg" xmlns:inkspace="http://www.inkscape.org/namespaces/inkscape" xmlns:xlink="http://www.w3.org/1999/xlink">
+  <defs id="defs_block">
+    <filter height="1.504" id="filter_blur" inkspace:collect="always" width="1.1575" x="-0.07875" y="-0.252">
+      <feGaussianBlur id="feGaussianBlur3780" inkspace:collect="always" stdDeviation="4.2" />
+    </filter>
+  </defs>
+  <title>blockdiag</title>
+  <desc />
+  <polygon fill="rgb(0,0,0)" points="547,787 701,787 709,795 709,802 547,802 547,787" stroke="rgb(0,0,0)" style="filter:url(#filter_blur);opacity:0.7;fill-opacity:1" />
+  <polygon fill="rgb(0,0,0)" points="547,932 611,932 619,940 619,947 547,947 547,932" stroke="rgb(0,0,0)" style="filter:url(#filter_blur);opacity:0.7;fill-opacity:1" />
+  <polygon fill="rgb(0,0,0)" points="547,1172 581,1172 589,1180 589,1187 547,1187 547,1172" stroke="rgb(0,0,0)" style="filter:url(#filter_blur);opacity:0.7;fill-opacity:1" />
+  <rect fill="rgb(0,0,0)" height="40" stroke="rgb(0,0,0)" style="filter:url(#filter_blur);opacity:0.7;fill-opacity:1" width="128" x="75" y="46" />
+  <rect fill="rgb(0,0,0)" height="40" stroke="rgb(0,0,0)" style="filter:url(#filter_blur);opacity:0.7;fill-opacity:1" width="128" x="267" y="46" />
+  <rect fill="rgb(0,0,0)" height="40" stroke="rgb(0,0,0)" style="filter:url(#filter_blur);opacity:0.7;fill-opacity:1" width="128" x="467" y="46" />
+  <rect fill="none" height="122" stroke="rgb(0,0,0)" width="384" x="40" y="314" />
+  <path d="M 40 329 L 80 329" fill="none" stroke="rgb(0,0,0)" />
+  <path d="M 80 329 L 96 314" fill="none" stroke="rgb(0,0,0)" />
+  <text fill="rgb(0,0,0)" font-family="sans-serif" font-size="11" font-style="normal" font-weight="normal" text-anchor="middle" textLength="24" x="60" y="327">loop</text>
+  <path d="M 136 80 L 136 1410" fill="none" stroke="rgb(0,0,0)" stroke-dasharray="8 4" />
+  <path d="M 328 80 L 328 1410" fill="none" stroke="rgb(0,0,0)" stroke-dasharray="8 4" />
+  <path d="M 528 80 L 528 1410" fill="none" stroke="rgb(0,0,0)" stroke-dasharray="8 4" />
+  <rect fill="rgb(255,255,255)" height="40" stroke="rgb(0,0,0)" width="128" x="72" y="40" />
+  <text fill="rgb(0,0,0)" font-family="sans-serif" font-size="11" font-style="normal" font-weight="normal" text-anchor="middle" textLength="36" x="136" y="66">Client</text>
+  <rect fill="rgb(255,255,255)" height="40" stroke="rgb(0,0,0)" width="128" x="264" y="40" />
+  <text fill="rgb(0,0,0)" font-family="sans-serif" font-size="11" font-style="normal" font-weight="normal" text-anchor="middle" textLength="54" x="328" y="66">Datastore</text>
+  <rect fill="rgb(255,255,255)" height="40" stroke="rgb(0,0,0)" width="128" x="464" y="40" />
+  <text fill="rgb(0,0,0)" font-family="sans-serif" font-size="11" font-style="normal" font-weight="normal" text-anchor="middle" textLength="54" x="528" y="66">Dataplane</text>
+  <path d="M 144 215 L 320 215" fill="none" stroke="rgb(0,0,0)" />
+  <polygon fill="rgb(0,0,0)" points="312,211 320,215 312,219" stroke="rgb(0,0,0)" />
+  <path d="M 144 280 L 320 280" fill="none" stroke="rgb(0,0,0)" />
+  <polygon fill="rgb(0,0,0)" points="152,276 144,280 152,284" stroke="rgb(0,0,0)" />
+  <path d="M 144 353 L 320 353" fill="none" stroke="rgb(0,0,0)" />
+  <polygon fill="rgb(0,0,0)" points="312,349 320,353 312,357" stroke="rgb(0,0,0)" />
+  <path d="M 144 418 L 320 418" fill="none" stroke="rgb(0,0,0)" />
+  <polygon fill="rgb(0,0,0)" points="152,414 144,418 152,422" stroke="rgb(0,0,0)" />
+  <path d="M 144 643 L 320 643" fill="none" stroke="rgb(0,0,0)" />
+  <polygon fill="rgb(0,0,0)" points="312,639 320,643 312,647" stroke="rgb(0,0,0)" />
+  <path d="M 336 788 L 520 788" fill="none" stroke="rgb(0,0,0)" />
+  <polygon fill="rgb(0,0,0)" points="512,784 520,788 512,792" stroke="rgb(0,0,0)" />
+  <polygon fill="rgb(255,182,193)" points="544,781 698,781 706,789 706,796 544,796 544,781" stroke="rgb(0,0,0)" />
+  <path d="M 698 781 L 698 789" fill="none" stroke="rgb(0,0,0)" />
+  <path d="M 698 789 L 706 789" fill="none" stroke="rgb(0,0,0)" />
+  <text fill="rgb(0,0,0)" font-family="sans-serif" font-size="11" font-style="normal" font-weight="normal" text-anchor="middle" textLength="138" x="621" y="794">or retrive changed data</text>
+  <path d="M 336 853 L 520 853" fill="none" stroke="rgb(0,0,0)" />
+  <polygon fill="rgb(0,0,0)" points="344,849 336,853 344,857" stroke="rgb(0,0,0)" />
+  <path d="M 336 933 L 520 933" fill="none" stroke="rgb(0,0,0)" />
+  <polygon fill="rgb(0,0,0)" points="512,929 520,933 512,937" stroke="rgb(0,0,0)" />
+  <polygon fill="rgb(255,182,193)" points="544,926 608,926 616,934 616,941 544,941 544,926" stroke="rgb(0,0,0)" />
+  <path d="M 608 926 L 608 934" fill="none" stroke="rgb(0,0,0)" />
+  <path d="M 608 934 L 616 934" fill="none" stroke="rgb(0,0,0)" />
+  <text fill="rgb(0,0,0)" font-family="sans-serif" font-size="11" font-style="normal" font-weight="normal" text-anchor="middle" textLength="48" x="576" y="939">validate</text>
+  <path d="M 336 1013 L 520 1013" fill="none" stroke="rgb(0,0,0)" />
+  <polygon fill="rgb(0,0,0)" points="344,1009 336,1013 344,1017" stroke="rgb(0,0,0)" />
+  <path d="M 336 1173 L 520 1173" fill="none" stroke="rgb(0,0,0)" />
+  <polygon fill="rgb(0,0,0)" points="512,1169 520,1173 512,1177" stroke="rgb(0,0,0)" />
+  <polygon fill="rgb(255,182,193)" points="544,1166 578,1166 586,1174 586,1181 544,1181 544,1166" stroke="rgb(0,0,0)" />
+  <path d="M 578 1166 L 578 1174" fill="none" stroke="rgb(0,0,0)" />
+  <path d="M 578 1174 L 586 1174" fill="none" stroke="rgb(0,0,0)" />
+  <text fill="rgb(0,0,0)" font-family="sans-serif" font-size="11" font-style="normal" font-weight="normal" text-anchor="middle" textLength="18" x="561" y="1179">set</text>
+  <path d="M 336 1253 L 520 1253" fill="none" stroke="rgb(0,0,0)" />
+  <polygon fill="rgb(0,0,0)" points="344,1249 336,1253 344,1257" stroke="rgb(0,0,0)" />
+  <path d="M 144 1333 L 320 1333" fill="none" stroke="rgb(0,0,0)" />
+  <polygon fill="rgb(0,0,0)" points="152,1329 144,1333 152,1337" stroke="rgb(0,0,0)" />
+  <text fill="rgb(0,0,0)" font-family="sans-serif" font-size="11" font-style="normal" font-weight="normal" text-anchor="middle" textLength="132" x="214" y="213">API contact info query</text>
+  <text fill="rgb(0,0,0)" font-family="sans-serif" font-size="11" font-style="normal" font-weight="normal" text-anchor="middle" textLength="96" x="272" y="278">API contact info</text>
+  <text fill="rgb(0,0,0)" font-family="sans-serif" font-size="11" font-style="normal" font-weight="normal" text-anchor="middle" textLength="24" x="160" y="351">emit</text>
+  <text fill="rgb(0,0,0)" font-family="sans-serif" font-size="11" font-style="normal" font-weight="normal" text-anchor="middle" textLength="42" x="299" y="416">emit ok</text>
+  <text fill="rgb(0,0,0)" font-family="sans-serif" font-size="11" font-style="normal" font-weight="normal" text-anchor="middle" textLength="36" x="166" y="641">commit</text>
+  <text fill="rgb(0,0,0)" font-family="sans-serif" font-size="11" font-style="normal" font-weight="normal" text-anchor="middle" textLength="24" x="352" y="786">emit</text>
+  <text fill="rgb(0,0,0)" font-family="sans-serif" font-size="11" font-style="normal" font-weight="normal" text-anchor="middle" textLength="42" x="499" y="851">emit ok</text>
+  <text fill="rgb(0,0,0)" font-family="sans-serif" font-size="11" font-style="normal" font-weight="normal" text-anchor="middle" textLength="42" x="361" y="931">prepare</text>
+  <text fill="rgb(0,0,0)" font-family="sans-serif" font-size="11" font-style="normal" font-weight="normal" text-anchor="middle" textLength="48" x="496" y="1011">prepaerd</text>
+  <text fill="rgb(0,0,0)" font-family="sans-serif" font-size="11" font-style="normal" font-weight="normal" text-anchor="middle" textLength="36" x="358" y="1171">commit</text>
+  <text fill="rgb(0,0,0)" font-family="sans-serif" font-size="11" font-style="normal" font-weight="normal" text-anchor="middle" textLength="66" x="487" y="1251">commit done</text>
+  <text fill="rgb(0,0,0)" font-family="sans-serif" font-size="11" font-style="normal" font-weight="normal" text-anchor="middle" textLength="66" x="287" y="1331">commit done</text>
+  <path d="M 48 137 L 253 137" fill="none" stroke="rgb(0,0,0)" />
+  <path d="M 48 141 L 253 141" fill="none" stroke="rgb(0,0,0)" />
+  <path d="M 411 137 L 616 137" fill="none" stroke="rgb(0,0,0)" />
+  <path d="M 411 141 L 616 141" fill="none" stroke="rgb(0,0,0)" />
+  <rect fill="rgb(208,208,208)" height="19" stroke="rgb(0,0,0)" width="158" x="253" y="130" />
+  <text fill="rgb(0,0,0)" font-family="sans-serif" font-size="11" font-style="normal" font-weight="normal" text-anchor="middle" textLength="138" x="332" y="145">emit configuration data</text>
+  <path d="M 48 485 L 274 485" fill="none" stroke="rgb(0,0,0)" />
+  <path d="M 48 489 L 274 489" fill="none" stroke="rgb(0,0,0)" />
+  <path d="M 390 485 L 616 485" fill="none" stroke="rgb(0,0,0)" />
+  <path d="M 390 489 L 616 489" fill="none" stroke="rgb(0,0,0)" />
+  <rect fill="rgb(208,208,208)" height="19" stroke="rgb(0,0,0)" width="116" x="274" y="478" />
+  <text fill="rgb(0,0,0)" font-family="sans-serif" font-size="11" font-style="normal" font-weight="normal" text-anchor="middle" textLength="96" x="332" y="493">two-phase commit</text>
+  <path d="M 48 565 L 232 565" fill="none" stroke="rgb(0,0,0)" />
+  <path d="M 48 569 L 232 569" fill="none" stroke="rgb(0,0,0)" />
+  <path d="M 432 565 L 616 565" fill="none" stroke="rgb(0,0,0)" />
+  <path d="M 432 569 L 616 569" fill="none" stroke="rgb(0,0,0)" />
+  <rect fill="rgb(208,208,208)" height="19" stroke="rgb(0,0,0)" width="200" x="232" y="558" />
+  <text fill="rgb(0,0,0)" font-family="sans-serif" font-size="11" font-style="normal" font-weight="normal" text-anchor="middle" textLength="180" x="332" y="573">two-phase commit prepare phase</text>
+  <path d="M 48 710 L 205 710" fill="none" stroke="rgb(0,0,0)" />
+  <path d="M 48 714 L 205 714" fill="none" stroke="rgb(0,0,0)" />
+  <path d="M 459 710 L 616 710" fill="none" stroke="rgb(0,0,0)" />
+  <path d="M 459 714 L 616 714" fill="none" stroke="rgb(0,0,0)" />
+  <rect fill="rgb(208,208,208)" height="19" stroke="rgb(0,0,0)" width="254" x="205" y="703" />
+  <text fill="rgb(0,0,0)" font-family="sans-serif" font-size="11" font-style="normal" font-weight="normal" text-anchor="middle" textLength="234" x="332" y="718">Notify changed data or get changed data</text>
+  <path d="M 48 1095 L 235 1095" fill="none" stroke="rgb(0,0,0)" />
+  <path d="M 48 1099 L 235 1099" fill="none" stroke="rgb(0,0,0)" />
+  <path d="M 429 1095 L 616 1095" fill="none" stroke="rgb(0,0,0)" />
+  <path d="M 429 1099 L 616 1099" fill="none" stroke="rgb(0,0,0)" />
+  <rect fill="rgb(208,208,208)" height="19" stroke="rgb(0,0,0)" width="194" x="235" y="1088" />
+  <text fill="rgb(0,0,0)" font-family="sans-serif" font-size="11" font-style="normal" font-weight="normal" text-anchor="middle" textLength="174" x="332" y="1103">two-phase commit commit phase</text>
+</svg>
+</div>
+<ol class="arabic simple">
+<li>ClientからDatastoreにBridge設定のためのAPIの接続情報を問い合せ</li>
+<li>ClientからDatastoreに値を設定するAPIを呼び出す</li>
+<li>Clientから各コンポーネントに値を更新するため &#8220;validation&#8221; を実行</li>
+<li>Datastoreがその値をsubscribeする各コンポーネントに &#8220;notify&#8221; を実施</li>
+<li>Dataplaneは&#8221;notify&#8221;を受け取り，該当するオブジェクトの変更を実施</li>
+<li>Dataplaneは終了後Datastoreに対して正常終了をしめす&#8221;commit&#8221;を実施</li>
+<li>Clientはnotifyを受信したことにより設定が正常終了を検知</li>
+</ol>
+</div>
+<div class="section" id="ip-route">
+<h3>4.5.3. IP route情報の設定 (揮発性情報の扱い)<a class="headerlink" href="#ip-route" title="このヘッドラインへのパーマリンク">¶</a></h3>
+<div><svg height="564" viewBox="0 0 640 564" width="640" xmlns="http://www.w3.org/2000/svg" xmlns:inkspace="http://www.inkscape.org/namespaces/inkscape" xmlns:xlink="http://www.w3.org/1999/xlink">
+  <defs id="defs_block">
+    <filter height="1.504" id="filter_blur" inkspace:collect="always" width="1.1575" x="-0.07875" y="-0.252">
+      <feGaussianBlur id="feGaussianBlur3780" inkspace:collect="always" stdDeviation="4.2" />
+    </filter>
+  </defs>
+  <title>blockdiag</title>
+  <desc />
+  <rect fill="rgb(0,0,0)" height="40" stroke="rgb(0,0,0)" style="filter:url(#filter_blur);opacity:0.7;fill-opacity:1" width="128" x="67" y="46" />
+  <rect fill="rgb(0,0,0)" height="40" stroke="rgb(0,0,0)" style="filter:url(#filter_blur);opacity:0.7;fill-opacity:1" width="128" x="259" y="46" />
+  <rect fill="rgb(0,0,0)" height="40" stroke="rgb(0,0,0)" style="filter:url(#filter_blur);opacity:0.7;fill-opacity:1" width="128" x="451" y="46" />
+  <path d="M 128 80 L 128 552" fill="none" stroke="rgb(0,0,0)" stroke-dasharray="8 4" />
+  <path d="M 320 80 L 320 552" fill="none" stroke="rgb(0,0,0)" stroke-dasharray="8 4" />
+  <path d="M 512 80 L 512 552" fill="none" stroke="rgb(0,0,0)" stroke-dasharray="8 4" />
+  <rect fill="rgb(255,255,255)" height="40" stroke="rgb(0,0,0)" width="128" x="64" y="40" />
+  <text fill="rgb(0,0,0)" font-family="sans-serif" font-size="11" font-style="normal" font-weight="normal" text-anchor="middle" textLength="36" x="128" y="66">Client</text>
+  <rect fill="rgb(255,255,255)" height="40" stroke="rgb(0,0,0)" width="128" x="256" y="40" />
+  <text fill="rgb(0,0,0)" font-family="sans-serif" font-size="11" font-style="normal" font-weight="normal" text-anchor="middle" textLength="54" x="320" y="66">Datastore</text>
+  <rect fill="rgb(255,255,255)" height="40" stroke="rgb(0,0,0)" width="128" x="448" y="40" />
+  <text fill="rgb(0,0,0)" font-family="sans-serif" font-size="11" font-style="normal" font-weight="normal" text-anchor="middle" textLength="54" x="512" y="66">Dataplane</text>
+  <path d="M 136 215 L 312 215" fill="none" stroke="rgb(0,0,0)" />
+  <polygon fill="rgb(0,0,0)" points="304,211 312,215 304,219" stroke="rgb(0,0,0)" />
+  <path d="M 136 280 L 312 280" fill="none" stroke="rgb(0,0,0)" />
+  <polygon fill="rgb(0,0,0)" points="144,276 136,280 144,284" stroke="rgb(0,0,0)" />
+  <path d="M 136 425 L 504 425" fill="none" stroke="rgb(0,0,0)" />
+  <polygon fill="rgb(0,0,0)" points="496,421 504,425 496,429" stroke="rgb(0,0,0)" />
+  <path d="M 136 490 L 504 490" fill="none" stroke="rgb(0,0,0)" />
+  <polygon fill="rgb(0,0,0)" points="144,486 136,490 144,494" stroke="rgb(0,0,0)" />
+  <text fill="rgb(0,0,0)" font-family="sans-serif" font-size="11" font-style="normal" font-weight="normal" text-anchor="middle" textLength="132" x="206" y="213">API contact info query</text>
+  <text fill="rgb(0,0,0)" font-family="sans-serif" font-size="11" font-style="normal" font-weight="normal" text-anchor="middle" textLength="96" x="264" y="278">API contact info</text>
+  <text fill="rgb(0,0,0)" font-family="sans-serif" font-size="11" font-style="normal" font-weight="normal" text-anchor="middle" textLength="114" x="197" y="423">add rib information</text>
+  <text fill="rgb(0,0,0)" font-family="sans-serif" font-size="11" font-style="normal" font-weight="normal" text-anchor="middle" textLength="48" x="480" y="488">OK or NG</text>
+  <path d="M 40 137 L 229 137" fill="none" stroke="rgb(0,0,0)" />
+  <path d="M 40 141 L 229 141" fill="none" stroke="rgb(0,0,0)" />
+  <path d="M 411 137 L 600 137" fill="none" stroke="rgb(0,0,0)" />
+  <path d="M 411 141 L 600 141" fill="none" stroke="rgb(0,0,0)" />
+  <rect fill="rgb(208,208,208)" height="19" stroke="rgb(0,0,0)" width="182" x="229" y="130" />
+  <text fill="rgb(0,0,0)" font-family="sans-serif" font-size="11" font-style="normal" font-weight="normal" text-anchor="middle" textLength="162" x="320" y="145">Query RIB APIs on Dataplane</text>
+  <path d="M 40 347 L 250 347" fill="none" stroke="rgb(0,0,0)" />
+  <path d="M 40 351 L 250 351" fill="none" stroke="rgb(0,0,0)" />
+  <path d="M 390 347 L 600 347" fill="none" stroke="rgb(0,0,0)" />
+  <path d="M 390 351 L 600 351" fill="none" stroke="rgb(0,0,0)" />
+  <rect fill="rgb(208,208,208)" height="19" stroke="rgb(0,0,0)" width="140" x="250" y="340" />
+  <text fill="rgb(0,0,0)" font-family="sans-serif" font-size="11" font-style="normal" font-weight="normal" text-anchor="middle" textLength="120" x="320" y="355">Set RIB to Dataplane</text>
+</svg>
+</div>
+<ol class="arabic simple">
+<li>ClientからDatastoreにIP route設定のためのAPIの接続情報を問い合せ</li>
+<li>ClientからDatastoreに値を設定するAPIのリファレンスを返す</li>
+<li>ClientからDataplaneに対し，RIB情報を設定</li>
+<li>Dataplaneの結果をクライアントに返す</li>
+</ol>
+</div>
+<div class="section" id="id9">
+<h3>4.5.4. 統計情報の取得 (揮発性情報の扱い)<a class="headerlink" href="#id9" title="このヘッドラインへのパーマリンク">¶</a></h3>
+<div><svg height="757" viewBox="0 0 832 757" width="832" xmlns="http://www.w3.org/2000/svg" xmlns:inkspace="http://www.inkscape.org/namespaces/inkscape" xmlns:xlink="http://www.w3.org/1999/xlink">
+  <defs id="defs_block">
+    <filter height="1.504" id="filter_blur" inkspace:collect="always" width="1.1575" x="-0.07875" y="-0.252">
+      <feGaussianBlur id="feGaussianBlur3780" inkspace:collect="always" stdDeviation="4.2" />
+    </filter>
+  </defs>
+  <title>blockdiag</title>
+  <desc />
+  <rect fill="rgb(0,0,0)" height="40" stroke="rgb(0,0,0)" style="filter:url(#filter_blur);opacity:0.7;fill-opacity:1" width="128" x="67" y="46" />
+  <rect fill="rgb(0,0,0)" height="40" stroke="rgb(0,0,0)" style="filter:url(#filter_blur);opacity:0.7;fill-opacity:1" width="128" x="259" y="46" />
+  <rect fill="rgb(0,0,0)" height="40" stroke="rgb(0,0,0)" style="filter:url(#filter_blur);opacity:0.7;fill-opacity:1" width="128" x="451" y="46" />
+  <rect fill="rgb(0,0,0)" height="40" stroke="rgb(0,0,0)" style="filter:url(#filter_blur);opacity:0.7;fill-opacity:1" width="128" x="643" y="46" />
+  <path d="M 128 80 L 128 745" fill="none" stroke="rgb(0,0,0)" stroke-dasharray="8 4" />
+  <path d="M 320 80 L 320 745" fill="none" stroke="rgb(0,0,0)" stroke-dasharray="8 4" />
+  <path d="M 512 80 L 512 745" fill="none" stroke="rgb(0,0,0)" stroke-dasharray="8 4" />
+  <path d="M 704 80 L 704 745" fill="none" stroke="rgb(0,0,0)" stroke-dasharray="8 4" />
+  <rect fill="rgb(255,255,255)" height="40" stroke="rgb(0,0,0)" width="128" x="64" y="40" />
+  <text fill="rgb(0,0,0)" font-family="sans-serif" font-size="11" font-style="normal" font-weight="normal" text-anchor="middle" textLength="36" x="128" y="66">Client</text>
+  <rect fill="rgb(255,255,255)" height="40" stroke="rgb(0,0,0)" width="128" x="256" y="40" />
+  <text fill="rgb(0,0,0)" font-family="sans-serif" font-size="11" font-style="normal" font-weight="normal" text-anchor="middle" textLength="54" x="320" y="66">Datastore</text>
+  <rect fill="rgb(255,255,255)" height="40" stroke="rgb(0,0,0)" width="128" x="448" y="40" />
+  <text fill="rgb(0,0,0)" font-family="sans-serif" font-size="11" font-style="normal" font-weight="normal" text-anchor="middle" textLength="54" x="512" y="66">StateSync</text>
+  <rect fill="rgb(255,255,255)" height="40" stroke="rgb(0,0,0)" width="128" x="640" y="40" />
+  <text fill="rgb(0,0,0)" font-family="sans-serif" font-size="11" font-style="normal" font-weight="normal" text-anchor="middle" textLength="54" x="704" y="66">Dataplane</text>
+  <path d="M 136 228 L 312 228" fill="none" stroke="rgb(0,0,0)" />
+  <polygon fill="rgb(0,0,0)" points="304,224 312,228 304,232" stroke="rgb(0,0,0)" />
+  <path d="M 136 293 L 312 293" fill="none" stroke="rgb(0,0,0)" />
+  <polygon fill="rgb(0,0,0)" points="144,289 136,293 144,297" stroke="rgb(0,0,0)" />
+  <path d="M 136 358 L 312 358" fill="none" stroke="rgb(0,0,0)" />
+  <polygon fill="rgb(0,0,0)" points="304,354 312,358 304,362" stroke="rgb(0,0,0)" />
+  <path d="M 136 408 L 312 408" fill="none" stroke="rgb(0,0,0)" />
+  <polygon fill="rgb(0,0,0)" points="144,404 136,408 144,412" stroke="rgb(0,0,0)" />
+  <path d="M 520 553 L 696 553" fill="none" stroke="rgb(0,0,0)" />
+  <polygon fill="rgb(0,0,0)" points="688,549 696,553 688,557" stroke="rgb(0,0,0)" />
+  <path d="M 328 618 L 504 618" fill="none" stroke="rgb(0,0,0)" />
+  <polygon fill="rgb(0,0,0)" points="336,614 328,618 336,622" stroke="rgb(0,0,0)" />
+  <path d="M 328 683 L 504 683" fill="none" stroke="rgb(0,0,0)" />
+  <polygon fill="rgb(0,0,0)" points="336,679 328,683 336,687" stroke="rgb(0,0,0)" />
+  <text fill="rgb(0,0,0)" font-family="sans-serif" font-size="11" font-style="normal" font-weight="normal" text-anchor="middle" textLength="162" x="221" y="220">API contact query for stats</text>
+  <text fill="rgb(0,0,0)" font-family="sans-serif" font-size="11" font-style="normal" font-weight="normal" text-anchor="middle" textLength="96" x="264" y="291">API contact info</text>
+  <text fill="rgb(0,0,0)" font-family="sans-serif" font-size="11" font-style="normal" font-weight="normal" text-anchor="middle" textLength="54" x="167" y="356">get stats</text>
+  <text fill="rgb(0,0,0)" font-family="sans-serif" font-size="11" font-style="normal" font-weight="normal" text-anchor="middle" textLength="84" x="566" y="551">bulk get stats</text>
+  <text fill="rgb(0,0,0)" font-family="sans-serif" font-size="11" font-style="normal" font-weight="normal" text-anchor="middle" textLength="18" x="495" y="616">set</text>
+  <text fill="rgb(0,0,0)" font-family="sans-serif" font-size="11" font-style="normal" font-weight="normal" text-anchor="middle" textLength="36" x="486" y="681">commit</text>
+  <path d="M 40 137 L 331 137" fill="none" stroke="rgb(0,0,0)" />
+  <path d="M 40 141 L 331 141" fill="none" stroke="rgb(0,0,0)" />
+  <path d="M 501 137 L 792 137" fill="none" stroke="rgb(0,0,0)" />
+  <path d="M 501 141 L 792 141" fill="none" stroke="rgb(0,0,0)" />
+  <rect fill="rgb(208,208,208)" height="19" stroke="rgb(0,0,0)" width="170" x="331" y="130" />
+  <text fill="rgb(0,0,0)" font-family="sans-serif" font-size="11" font-style="normal" font-weight="normal" text-anchor="middle" textLength="150" x="416" y="145">Stats retrive from client</text>
+  <path d="M 40 475 L 316 475" fill="none" stroke="rgb(0,0,0)" />
+  <path d="M 40 479 L 316 479" fill="none" stroke="rgb(0,0,0)" />
+  <path d="M 516 475 L 792 475" fill="none" stroke="rgb(0,0,0)" />
+  <path d="M 516 479 L 792 479" fill="none" stroke="rgb(0,0,0)" />
+  <rect fill="rgb(208,208,208)" height="19" stroke="rgb(0,0,0)" width="200" x="316" y="468" />
+  <text fill="rgb(0,0,0)" font-family="sans-serif" font-size="11" font-style="normal" font-weight="normal" text-anchor="middle" textLength="180" x="416" y="483">Stats replication to Datastore</text>
+</svg>
+</div>
+<ol class="upperalpha simple">
+<li>統計情報の取得<ol class="arabic">
+<li>ClientがDatastoreに統計情報を取得するAPIの接続情報を問い合せ</li>
+<li>ClientがDatastoreに統計情報を取得するAPIを呼び出す</li>
+<li>Datastoreは内部で保持している統計情報を即座に返す</li>
+</ol>
+</li>
+<li>統計情報の更新<ol class="arabic">
+<li>StateSyncManagerがDataplaneに統計情報データの取得APIの接続情報を問い合せ</li>
+<li>StateSyncManagerが自律的にDataplaneに統計情報データをバルク取得する</li>
+<li>StateSyncManagerがその取得した統計情報データをDatastoreに設定する</li>
+<li>StateSyncManagerが設定した統計情報データを反映するため &#8220;Commit&#8221;</li>
+</ol>
+</li>
+</ol>
+</div>
+</div>
+</div>
+
+
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="dataplane.html" class="btn btn-neutral float-right" title="5. Software Dataplane" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="review.html" class="btn btn-neutral" title="3. Lagopus version 0.2の振り返り" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2016, Lagopus project.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'rc0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+      <script type="text/javascript" src="_static/translations.js"></script>
+      <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

@@ -1,0 +1,99 @@
+.. _ref_model:
+
+次期Lagopusの情報モデル
+==================================
+
+(オブジェクトの構成と，オブジェクトの属性の話が混ざっている)
+(カウンタが不在)
+
+- Lagopus本体の構成情報
+  - 構成情報として，Dataplaneと接続するVNFアプリケーション（DSL，OpenFlow Controller等）のコンフィグ情報も追加する．
+
+    - (ApplicationはBridge毎で良い？)
+
+.. blockdiag::
+
+   blockdiag {
+     Lagopus -> interface;
+     Lagopus -> VNF_module;
+   }
+
+- Bridgeの構成情報
+
+  - BridgeにつながるInterfaceとVRFにつながるInterfaceは同一のもの．
+
+    - (紛らわしいので必ずVRFを設定する方がよい？)
+
+.. blockdiag::
+
+   blockdiag {
+     Bridge -> VRF;
+     Bridge -> interface;
+     Bridge -> table;
+     Bridge -> VNF_module;
+     VRF -> interface;
+     VRF -> table;
+     VRF -> VRRP;
+     interface -> policer;
+     interface -> queue;
+     policer -> policer-action;
+   }
+
+- Interfaceの構成情報
+
+  - これまでの物理・仮想ポートだけでなく，VLANやtunnel等に対応する必要がある．
+
+    - （interfaceの識別に検索テーブルが必要なのでtableの下の方が扱いやすい？）
+    - （IPの設定はどこ？）
+
+.. blockdiag::
+
+   blockdiag {
+     interface -> NIC;
+     interface -> VLAN;
+     interface -> label;
+     interface -> tunnel;
+   }
+
+- tableの情報
+
+  - これまでのOpenFlowだけではなく，RIB,FIB等のテーブルも必要
+  - ルータだけでなく，FWなどとも同様のアーキテクチャで繋がるならばテーブルの種類が肥大化してしまう．Application以下にまとめてみた．テーブルの検索順序も不明となるので，要検討．
+
+.. blockdiag::
+
+   blockdiag {
+     table -> flow;
+     table -> group;
+     table -> meter;
+     table -> L2bridge -> FDB;
+     table -> TunnelIB;
+     table -> Application -> ARP_table;
+     table -> Application -> RIB -> FIB;
+     table -> Application -> LIB -> LFIB;
+   }
+
+- VNFモジュールの構成情報(OpenFlow, Snaproute等)
+
+.. blockdiag::
+
+   blockdiag {
+     VNF_module -> client_API;
+   }
+
+- OpenFlowの例
+
+.. blockdiag::
+
+   blockdiag {
+     OpenFlow_module -> Controller;
+     OpenFlow_module -> channel;
+   }
+
+- DSLの例
+
+.. blockdiag::
+
+   blockdiag {
+     DSL_module -> port;
+   }

@@ -1,0 +1,266 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Design of Lagopus Software Router Version 1.0 &mdash; Design of Lagopus software switch rc0 ドキュメント</title>
+  
+
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+    <link rel="top" title="Design of Lagopus software switch rc0 ドキュメント" href="#"/>
+        <link rel="next" title="1. About this book" href="preface.html"/> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="#" class="icon icon-home"> Design of Lagopus software switch
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.0.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <ul>
+<li class="toctree-l1"><a class="reference internal" href="preface.html">1. About this book</a></li>
+<li class="toctree-l1"><a class="reference internal" href="introduction.html">2. Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="review.html">3. Lagopus version 0.2の振り返り</a></li>
+<li class="toctree-l1"><a class="reference internal" href="architecture.html">4. 次期LagopusのArchitecture</a></li>
+<li class="toctree-l1"><a class="reference internal" href="dataplane.html">5. Software Dataplane</a></li>
+<li class="toctree-l1"><a class="reference internal" href="routingos.html">6. Routing OS</a></li>
+<li class="toctree-l1"><a class="reference internal" href="usecase.html">7. 適応先</a></li>
+<li class="toctree-l1"><a class="reference internal" href="roadmap.html">8. 開発ロードマップ</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="#">Design of Lagopus software switch</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+ 
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="#">Docs</a> &raquo;</li>
+      
+    <li>Design of Lagopus Software Router Version 1.0</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="_sources/index.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="design-of-lagopus-software-router-version-1-0">
+<h1>Design of Lagopus Software Router Version 1.0<a class="headerlink" href="#design-of-lagopus-software-router-version-1-0" title="このヘッドラインへのパーマリンク">¶</a></h1>
+<p>Contents:</p>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="preface.html">1. About this book</a></li>
+<li class="toctree-l1"><a class="reference internal" href="introduction.html">2. Introduction</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="introduction.html#design-principles">2.1. Design principles</a></li>
+<li class="toctree-l2"><a class="reference internal" href="introduction.html#requirements">2.2. Requirements</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="review.html">3. Lagopus version 0.2の振り返り</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="review.html#id1">3.1. 総括</a></li>
+<li class="toctree-l2"><a class="reference internal" href="review.html#id2">3.2. 課題と改善点</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="architecture.html">4. 次期LagopusのArchitecture</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="architecture.html#id1">4.1. 全体的な方針</a></li>
+<li class="toctree-l2"><a class="reference internal" href="architecture.html#id2">4.2. 改善の方針</a></li>
+<li class="toctree-l2"><a class="reference internal" href="architecture.html#id3">4.3. スイッチを構成する代表的なコンポーネント</a></li>
+<li class="toctree-l2"><a class="reference internal" href="architecture.html#id4">4.4. 構成情報の設定のフローについて</a></li>
+<li class="toctree-l2"><a class="reference internal" href="architecture.html#id7">4.5. 具体的な制御の流れ</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="dataplane.html">5. Software Dataplane</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="dataplane.html#id1">5.1. 目的</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dataplane.html#lagopus-0-2-dataplane">5.2. Lagopus 0.2 dataplane</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dataplane.html#lagopus-packet-processing-framework">5.3. 次期Lagopus Packet processing framework</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="routingos.html">6. Routing OS</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="routingos.html#id1">6.1. 前提</a></li>
+<li class="toctree-l2"><a class="reference internal" href="routingos.html#tap">6.2. Tapによるイベントのエスカレーション</a></li>
+<li class="toctree-l2"><a class="reference internal" href="routingos.html#id2">6.3. Routing OSとの連携</a></li>
+<li class="toctree-l2"><a class="reference internal" href="routingos.html#ipsec-agent">6.4. IPsec Agentとの連携</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="usecase.html">7. 適応先</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="usecase.html#bgp-router">7.1. BGP Router</a></li>
+<li class="toctree-l2"><a class="reference internal" href="usecase.html#ipsec-router">7.2. IPsec Router</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="roadmap.html">8. 開発ロードマップ</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="roadmap.html#cy2016-q4">8.1. CY2016 Q4</a></li>
+<li class="toctree-l2"><a class="reference internal" href="roadmap.html#cy2017-q1">8.2. CY2017 Q1</a></li>
+<li class="toctree-l2"><a class="reference internal" href="roadmap.html#cy2017-q2">8.3. CY2017 Q2</a></li>
+<li class="toctree-l2"><a class="reference internal" href="roadmap.html#cy2017-q3">8.4. CY2017 Q3</a></li>
+<li class="toctree-l2"><a class="reference internal" href="roadmap.html#q3">8.5. 2017 Q3</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div class="section" id="indices-and-tables">
+<h1>Indices and tables<a class="headerlink" href="#indices-and-tables" title="このヘッドラインへのパーマリンク">¶</a></h1>
+<ul class="simple">
+<li><a class="reference internal" href="genindex.html"><span class="std std-ref">索引</span></a></li>
+<li><a class="reference internal" href="py-modindex.html"><span class="std std-ref">モジュール索引</span></a></li>
+<li><a class="reference internal" href="search.html"><span class="std std-ref">検索ページ</span></a></li>
+</ul>
+</div>
+
+
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="preface.html" class="btn btn-neutral float-right" title="1. About this book" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2016, Lagopus project.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'rc0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+      <script type="text/javascript" src="_static/translations.js"></script>
+      <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

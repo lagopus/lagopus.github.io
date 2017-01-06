@@ -1,0 +1,282 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>2. Introduction &mdash; Design of Lagopus software switch rc0 ドキュメント</title>
+  
+
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+    <link rel="top" title="Design of Lagopus software switch rc0 ドキュメント" href="index.html"/>
+        <link rel="next" title="3. Lagopus version 0.2の振り返り" href="review.html"/>
+        <link rel="prev" title="1. About this book" href="preface.html"/> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="index.html" class="icon icon-home"> Design of Lagopus software switch
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.0.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="preface.html">1. About this book</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">2. Introduction</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#design-principles">2.1. Design principles</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#requirements">2.2. Requirements</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="review.html">3. Lagopus version 0.2の振り返り</a></li>
+<li class="toctree-l1"><a class="reference internal" href="architecture.html">4. 次期LagopusのArchitecture</a></li>
+<li class="toctree-l1"><a class="reference internal" href="dataplane.html">5. Software Dataplane</a></li>
+<li class="toctree-l1"><a class="reference internal" href="routingos.html">6. Routing OS</a></li>
+<li class="toctree-l1"><a class="reference internal" href="usecase.html">7. 適応先</a></li>
+<li class="toctree-l1"><a class="reference internal" href="roadmap.html">8. 開発ロードマップ</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="index.html">Design of Lagopus software switch</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+ 
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="index.html">Docs</a> &raquo;</li>
+      
+    <li>2. Introduction</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="_sources/introduction.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="introduction">
+<span id="ref-introduction"></span><h1>2. Introduction<a class="headerlink" href="#introduction" title="このヘッドラインへのパーマリンク">¶</a></h1>
+<p>Lagopusプロジェクトは，2013年よりNTT研究所において，汎用サーバで動作し，高速かつ大容量のフロー制御が求められるネットワークドメインや高性能なパケット処理が求められる仮想化環境において活用可能であり，SDN/OpenFlow 1.3に対応した高速なソフトウエアスイッチの開発を目指しスタートした．
+柔軟なパケット処理やネットワークI/Oをユーザースペースで実現するDPDKに着目し，Lagopusでは近年の汎用サーバがもつマルチコアCPUにむけての最適化や，高速なマルチレイヤに対応したフロー検索機構および，フローキャッシュ機構を備えている．
+LagopusではOpenFlow Switchの仕様を拡張し，特定のパケットに対してオーバーレイ・ネットワークを実現する複数Tunnelプロトコルのencapsulation, decapsulation処理が可能である．</p>
+<p>現在のLagopusは異種ネットワークを接続可能なswitchやrouterのデータプレーンの機能は提供しているが，プロトコルやネットワーク制御処理はOpenFlow controllerの実装に依存している．当初，OpenFlow controller アプリケーションの増加を期待していたが，コントローラ開発にもネットワークに関する深い知識と運用経験が必要になるため，現在でもOpenFlow controller アプリケーションの種類や数は増えていない．</p>
+<p>次期Lagopusでは，SD-WANへの適応，ユースケースの拡大およびオープンソースコミュニティの拡大を狙い，ルータに備えている標準的なプロトコル制御機能に加え，既存のNW上でオーバーレイ・ネットワークを実現するVxLANやGRE, 暗号化IPsecの終端機能にも対応するソフトウエアルータを目指す．
+これまでのOpenFlow Switchで開発した柔軟なフロー検索と処理をもつデータプレーンを活かしたうえで，様々なネットワーク制御系アプリやオーケストレーションと連携可能なようにLagopusを拡張する．</p>
+<div class="section" id="design-principles">
+<h2>2.1. Design principles<a class="headerlink" href="#design-principles" title="このヘッドラインへのパーマリンク">¶</a></h2>
+<p>Lagopusの設計や実装に関して，以下のデザインプリンシパルを採用することとした．</p>
+<ul class="simple">
+<li>拡張性を備えたモジュール型のアーキテクチャ<ul>
+<li>オープンソースやプロプラなネットワーク制御エージェントやネットワークOSとの柔軟な連携</li>
+<li>様々なプロトコルフォーマットやトンネルプロトコルに対し構成可能なデータプレーン</li>
+</ul>
+</li>
+<li>マイクロサービスアーキテクチャ<ul>
+<li>各コンポーネントやモジュールを分離し可用性の向上</li>
+<li>他システムとの連携を促進</li>
+<li>各コンポーネントをAPIやRPCを通して制御</li>
+<li>ネットワーク制御のためのフロー識別・転送処理機能とAPIの提供</li>
+</ul>
+</li>
+<li>高い移植性<ul>
+<li>各コンポーネントや・ライブラリを別な実装に交換可能</li>
+<li>新しいプロトコル制御やプロトコルフォーマットに対応可能</li>
+</ul>
+</li>
+<li>高性能なパケット転送・処理能力の実現<ul>
+<li>マルチCPU，マルチコアCPUを活用</li>
+<li>ハードウエアオフロード処理活用</li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="section" id="requirements">
+<h2>2.2. Requirements<a class="headerlink" href="#requirements" title="このヘッドラインへのパーマリンク">¶</a></h2>
+<p>次期Lagopusで求められる主な機能は以下のとおり．</p>
+<ul class="simple">
+<li>Ethernet Bridge機能<ul>
+<li>VLAN, static MAC登録</li>
+<li>VRF</li>
+</ul>
+</li>
+<li>Layer 3機能<ul>
+<li>IPv4, IPv6</li>
+<li>VRF</li>
+<li>BGPによるルーチング制御</li>
+<li>VRRP, ICMP</li>
+</ul>
+</li>
+<li>Tunnel終端機能<ul>
+<li>オーバーレイトンネル VxLAN, GRE, MPLS</li>
+<li>暗号化トンネル IPsec</li>
+</ul>
+</li>
+<li>フロー統計出力機能<ul>
+<li>SNMP</li>
+<li>sFlow, nFlow</li>
+</ul>
+</li>
+<li>ユーザへのフロー制御APIと統計取得API<ul>
+<li>Flow-based API</li>
+<li>スイッチ構成制御API</li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+
+
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="review.html" class="btn btn-neutral float-right" title="3. Lagopus version 0.2の振り返り" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="preface.html" class="btn btn-neutral" title="1. About this book" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2016, Lagopus project.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'rc0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+      <script type="text/javascript" src="_static/translations.js"></script>
+      <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

@@ -1,0 +1,98 @@
+.. _ref_routingos:
+
+Routing OS
+============================================
+
+プロトコル処理を行うRouting OSについて記述する．
+
+前提
+--------------------------
+
+- Routing OSのプロセスはユーザースペース実装
+
+  - 一部制御・機能はKernel空間でも実現
+
+    - ARP, Tunnel terminationなど
+
+- Routing OSはOSのkernel機能の活用
+
+  - Kernelが管理するnetwork interface情報を活用
+
+  - kernelが提供するTCPやUDP終端機能の上で動作するsocketを用いて対向との通信が可能
+
+- Routing OSはソフトウエアスイッチの制御はスイッチのAPI経由で実施
+
+  - C API or RPC 経由の処理
+
+- Routing OSへのイベントやパケットのエスカレーションはtap IFもしくはQueueにより実施
+
+
+Tapによるイベントのエスカレーション
+----------------------------------------------------
+
+LinuxやBSDのカーネルに実装されたネットワークスタックや，ユーザースペースに実装されたルーティングを活用するために，
+データプレーンからシグナリングや制御に用いられるパケットをOS側にエスカレーションする機能を提供する．
+
+エスカレーションのために，OS側に汎用仮想インタフェースであるtapを生成し，
+データプレーンの特定のプロトコル処理部と生成したtapインタフェースを接続し，該当パケットを書き込む．
+また，ルーティングスタックからの送出のために逆向きの処理も合わせて行う．
+
+
+Routing OSとの連携
+----------------------------------------------------
+
+.. image:: ./images/routing-os.png
+
+
+ルータの情報モデルはOpenconfigdから，内部の情報モデルを生成し，設定のAPIも同様に生成する．
+RIB (Routing Information Base), FIB (Forwarding Information Base), LIB (Label Information Base),
+TIB (Tunnel Information Base), Adjacency tableを保持し， 各プロトコルからの制御を統合的に管理するものとする．
+
+Routing OS内部には設定情報を管理するコンポーネントと，内部のイベント情報の転送や処理を実施するEvent message busを用意し，複数のプロトコル制御に対応する．
+
+データプレーンへの制御についてはRouting OSからのAPI (RPC) の実行により実施する．
+
+IPsec Agentとの連携
+----------------------------------------------------
+
+- IKE処理としてstrongSwanを利用する
+
+  - FreeS/WANから派生したOpenswan，strongSwanを比較すると，strongSwanの方が頻繁にメンテされている
+
+- IKE処理をstrongSwanで実施し，Lagopusでデータプレーン処理(ESP，AH)を実施
+
+  - strongSwanでIKEv1/2による接続先との鍵交換を行い，SADを生成/更新
+
+  - RPCでstrongSwanのSADとLagopusのSADを同期
+
+  - Lagopusは同期されたSADを利用してデータプレーン処理を実施
+
+- (調査中)strongSwanとRPCの接続方法
+
+  - VICIを用いる手法と，pluginの枠組みを使う方法がある
+
+  - VICI (Versatile IKE Control Interface)
+
+    - strongSwanのkeying daemonであるcharotを制御するためのIPCプロトコル
+
+    - charotのコマンドラインインターフェースであるswanctlもこのVICIを利用している
+
+    - Cのclient libraryとしてlibviciがある
+
+    - VICIを利用してSADを取得できそう
+
+      - 但し，SAD全体の取得しかできない可能性がある
+
+      - またcharot側からのイベント通知の仕組みがあるが，SAD更新のイベント通知が無いかもしれず，ポーリングが必要となる可能性あり
+
+  - plugin
+
+    - strongSwanのIPsecバックエンドは，pluginとして実装されている
+
+      - kernel_netlink: デフォルトのLinuxカーネルを利用するバックエンド
+
+      - kernel_libipsec: ユーザースペース実装のバックエンド
+
+    - pluginとして，バックエンドの各機能をコールバックとしてstrongSwanに登録，これによりSAを取得可能
+
+      - 例えばSAが追加された場合にadd_sa()が呼ばれ，SAの情報が取得できるものと思われる

@@ -1,0 +1,252 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>5. Software Dataplane &mdash; Design of Lagopus software switch rc0 ドキュメント</title>
+  
+
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+    <link rel="top" title="Design of Lagopus software switch rc0 ドキュメント" href="index.html"/>
+        <link rel="next" title="6. Routing OS" href="routingos.html"/>
+        <link rel="prev" title="4. 次期LagopusのArchitecture" href="architecture.html"/> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="index.html" class="icon icon-home"> Design of Lagopus software switch
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.0.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="preface.html">1. About this book</a></li>
+<li class="toctree-l1"><a class="reference internal" href="introduction.html">2. Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="review.html">3. Lagopus version 0.2の振り返り</a></li>
+<li class="toctree-l1"><a class="reference internal" href="architecture.html">4. 次期LagopusのArchitecture</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">5. Software Dataplane</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#id1">5.1. 目的</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#lagopus-0-2-dataplane">5.2. Lagopus 0.2 dataplane</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#lagopus-packet-processing-framework">5.3. 次期Lagopus Packet processing framework</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#id2">5.3.1. 構成</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="routingos.html">6. Routing OS</a></li>
+<li class="toctree-l1"><a class="reference internal" href="usecase.html">7. 適応先</a></li>
+<li class="toctree-l1"><a class="reference internal" href="roadmap.html">8. 開発ロードマップ</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="index.html">Design of Lagopus software switch</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+ 
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="index.html">Docs</a> &raquo;</li>
+      
+    <li>5. Software Dataplane</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="_sources/dataplane.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="software-dataplane">
+<span id="ref-dataplane"></span><h1>5. Software Dataplane<a class="headerlink" href="#software-dataplane" title="このヘッドラインへのパーマリンク">¶</a></h1>
+<div class="section" id="id1">
+<h2>5.1. 目的<a class="headerlink" href="#id1" title="このヘッドラインへのパーマリンク">¶</a></h2>
+<p>次期Lagopusの高性能かつ柔軟に複数プロトコルに対応したデータプレーンを構成できるなFast pathを実現する．</p>
+<ul class="simple">
+<li>Ethernet, VLAN, IPv4, IPv6などのパケット転送やルーティング</li>
+<li>GRE, IPsecなどのトンネルプロトコルの終端</li>
+<li>Userspace TCP, UDPの実装と連携</li>
+<li>Zero-copy socketの実現</li>
+<li>新しいプロトコルフォーマットやトンネルプロトコルへの対応</li>
+<li>柔軟なフロー検索とその検索に対してのアクション</li>
+<li>プロトコル処理のためのパケットやイベントのエスカレーション (Slow-path用機構)</li>
+</ul>
+</div>
+<div class="section" id="lagopus-0-2-dataplane">
+<h2>5.2. Lagopus 0.2 dataplane<a class="headerlink" href="#lagopus-0-2-dataplane" title="このヘッドラインへのパーマリンク">¶</a></h2>
+<p>Lagopus 0.2までのデータプレーンでは，ポート番号を中心としたOpenFlowパイプラインをベースに，Network I/Oとパケット処理を分離した構成をとっている．またパケット処理ではtask-completion モデルを採用していた．</p>
+<p>Network I/Oと処理を分離したため，柔軟なパケット処理を実現している一方，スレッド間通信のオーバーヘッドやデータのキャッシュの効率上，パケット処理が20MPPS程度に制限されている．また，OpenFlowをベースとしたパイプライン拡張であるためデータプレーンやコントロールプレーンが綺麗に分離されている転送などのネットワーク制御の場合は問題ないが，IPsecやICMPのコントロールパケットのエスカレーションやパケット送出などデータプレーンとスイッチエージェントやデータプレーンとコントロールプレーンが密結合している制御などのルーティング機能に対しては，新しい拡張やモジュールが必要であると考えている．</p>
+<img alt="_images/lagopus-pipeline-original-details.png" src="_images/lagopus-pipeline-original-details.png" />
+</div>
+<div class="section" id="lagopus-packet-processing-framework">
+<h2>5.3. 次期Lagopus Packet processing framework<a class="headerlink" href="#lagopus-packet-processing-framework" title="このヘッドラインへのパーマリンク">¶</a></h2>
+<p>次期Lagopusでは，様々なプロトコルフォーマットに対して，高速にパケット検索，転送，処理を実現するためにデータプレーンの構成を拡張し，ディスパッチャを中心とした各プロトコル・パケット処理に対応することとする．
+従来のデータプレーンの構成を踏襲し，パケット制御は，仮想ポートと処理プロトコルテーブル指定して処理する</p>
+<p>従来まではより汎用的なパイプラインを用いていたたが，トンネルプロトコルやルーティングにおけるパケット処理の性質を考慮し，処理のステージをIngressとEgressに分ける．</p>
+<img alt="_images/packet-processing-high-level-overview.png" src="_images/packet-processing-high-level-overview.png" />
+<img alt="_images/packet-processing-dispatcher-model.png" src="_images/packet-processing-dispatcher-model.png" />
+<div class="section" id="id2">
+<h3>5.3.1. 構成<a class="headerlink" href="#id2" title="このヘッドラインへのパーマリンク">¶</a></h3>
+<p>データプレーン用に割り当てられたCPUのうち1コアは，全体のデータプレーンの構成やデータプレーンの資源管理，エージェントとの制御通信路，OSのネットワークスタックへのエスカレーションなどの処理を行うように割り当てる．
+それ以外のCPUについては，パケット処理用に割り当て，マルチコアCPUを活用し処理スループットやクライアント収容数を向上させるために使用する．</p>
+<p>各プロトコル処理部は，以下のDispatcherに登録するパケット分類，パケット処理の関数，エージェントとの制御API，ポート管理のAPIを登録する．</p>
+</div>
+</div>
+</div>
+
+
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="routingos.html" class="btn btn-neutral float-right" title="6. Routing OS" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="architecture.html" class="btn btn-neutral" title="4. 次期LagopusのArchitecture" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2016, Lagopus project.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'rc0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+      <script type="text/javascript" src="_static/translations.js"></script>
+      <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>
