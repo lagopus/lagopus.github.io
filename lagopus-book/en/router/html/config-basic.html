@@ -1,0 +1,585 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>6. Configuring and running Lagopus software router &mdash; Lagopus software router book 0.1.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="7. Example configurations of Lagopus router" href="config-examples.html" />
+    <link rel="prev" title="5. How to install Lagopus software router" href="installation.html" /> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="index.html" class="icon icon-home"> Lagopus software router book
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="preface.html">1. About this book</a></li>
+<li class="toctree-l1"><a class="reference internal" href="introduction.html">2. Introduction to Lagopus software router</a></li>
+<li class="toctree-l1"><a class="reference internal" href="architecture.html">3. Lagopus software router architecture</a></li>
+<li class="toctree-l1"><a class="reference internal" href="installation-dpdk.html">4. How to install DPDK for Lagopus software router</a></li>
+<li class="toctree-l1"><a class="reference internal" href="installation.html">5. How to install Lagopus software router</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">6. Configuring and running Lagopus software router</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#configuration-files">6.1. Configuration files</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#about-openconfigd-conf">6.1.1. About openconfigd.conf</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#about-vsw-conf">6.1.2. About vsw.conf</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#running-lagopus-software-router">6.2. Running Lagopus software router</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#running-openconfigd">6.2.1. Running Openconfigd</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#running-vsw">6.2.2. Running vsw</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#using-cli">6.3. Using CLI</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#sample-config-bridge">6.4. Sample Config (bridge)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#sample-config-router">6.5. Sample Config (router)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="config-examples.html">7. Example configurations of Lagopus router</a></li>
+<li class="toctree-l1"><a class="reference internal" href="debug.html">8. Appendix: How to debug Lagopus software router</a></li>
+<li class="toctree-l1"><a class="reference internal" href="virtualbox.html">9. Appendix: How to setup VM for Lagopus software router on VirtualBox</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Lagopus software router book</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>6. Configuring and running Lagopus software router</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/config-basic.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="configuring-and-running-lagopus-software-router">
+<span id="ref-config-basic"></span><h1>6. Configuring and running Lagopus software router<a class="headerlink" href="#configuring-and-running-lagopus-software-router" title="Permalink to this headline">¶</a></h1>
+<p>This section describes how to configure and run Lagopus software router using two examples, running Lagopus software router as bridge (vlan) and router.</p>
+<p>All examples in this section are based on VirtualBox VM having below two ethernet ports and DPDK 17.11.1 installed.
+You should change port name / PCIe <code class="docutils literal notranslate"><span class="pre">domain:bus:slot.func</span></code> matching to your environment.</p>
+<ul class="simple">
+<li>enp0s8 (0000:00:08.0)</li>
+<li>enp0s9 (0000:00:09.0)</li>
+</ul>
+<div class="section" id="configuration-files">
+<h2>6.1. Configuration files<a class="headerlink" href="#configuration-files" title="Permalink to this headline">¶</a></h2>
+<p>Running Lagopus software router would require running both openconfigd (configuration manager) and vsw (virtual switch dataplane). Default configuration files read during boot time and its locations are as follows.</p>
+<ul class="simple">
+<li>openconfigd: /usr/local/etc/openconfigd.conf</li>
+<li>vsw: /usr/local/etc/vsw.conf</li>
+</ul>
+<div class="section" id="about-openconfigd-conf">
+<h3>6.1.1. About openconfigd.conf<a class="headerlink" href="#about-openconfigd-conf" title="Permalink to this headline">¶</a></h3>
+<p>You could copy and customize sample <code class="docutils literal notranslate"><span class="pre">*.conf</span></code> files under below GitHub repo to start openconfigd.</p>
+<ul class="simple">
+<li><a class="reference external" href="https://github.com/lagopus/lagopus-router/tree/master/samples">https://github.com/lagopus/lagopus-router/tree/master/samples</a></li>
+</ul>
+<p>However, openconfigd does NOT require any configuration files during start up. You could use blank openconfigd.conf file or use <code class="docutils literal notranslate"><span class="pre">-z</span></code> option to start openconfigd with no configuration and later set / commit configuration via CLI.</p>
+<p>Refer to examples later in this section for openconfigd CLI commands.</p>
+</div>
+<div class="section" id="about-vsw-conf">
+<h3>6.1.2. About vsw.conf<a class="headerlink" href="#about-vsw-conf" title="Permalink to this headline">¶</a></h3>
+<p>Valid vsw.conf is requred to start vsw. (Unlike openconfigd which does not require config file)
+As you can see in below default vsw.conf configuration file, vsw configuration is sparated with <code class="docutils literal notranslate"><span class="pre">[section]</span></code> following with parameters related to the section.</p>
+<ul class="simple">
+<li>DPDK section<ul>
+<li>Set DPDK related parameters here.</li>
+<li>For example, change core_mask to 0x0e if you want to use core 1,2,3.</li>
+</ul>
+</li>
+<li>Openconfigd section<ul>
+<li>Set host and port.</li>
+<li>Typically you can keep default value.</li>
+</ul>
+</li>
+<li>Other sections<ul>
+<li>Set core(s) to be used by each module.</li>
+</ul>
+</li>
+</ul>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span># VSW configuration file
+
+# DPDK configuration section
+[dpdk]
+core_mask = 0xfe
+# core_list = &quot;1,2,3,4,5,6,7&quot;
+memory_channel = 2
+pmd_path = &quot;/usr/local/lib&quot;
+num_elements = 131072
+cache_size = 256
+
+# Openconfigd section
+[openconfig]
+server_host = &quot;localhost&quot;   # Openconfigd server host
+server_port = 2650      # Openconfigd server port
+listen_port = 2653      # Port to listen for show command
+
+# ethdev configuration section
+[ethdev]
+rx_core = 2 # Slave core to use for RX
+tx_core = 3 # Slave core to use for TX
+
+# bridge configuration section
+[bridge]
+core = 2
+
+# RIF configuration section
+[rif]
+core = 3
+
+# tunnel configuration section
+[tunnel]
+  # IP in IP tunnel
+  [tunnel.ipip]
+  inbound_core = 2
+  outbound_core = 3
+
+# router configuration section
+[router]
+core = 3
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="running-lagopus-software-router">
+<h2>6.2. Running Lagopus software router<a class="headerlink" href="#running-lagopus-software-router" title="Permalink to this headline">¶</a></h2>
+<p>When running Lagopus software router, you should running Openconfigd and followed by vsw.</p>
+<div class="section" id="running-openconfigd">
+<h3>6.2.1. Running Openconfigd<a class="headerlink" href="#running-openconfigd" title="Permalink to this headline">¶</a></h3>
+<p>YANG file should be specified when running Openconfigd. Typical way to do so is to move to <code class="docutils literal notranslate"><span class="pre">yang</span></code> directory and start openconfigd.</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>$ cd ~/go/src/github.com/lagopus/lagopus-router/yang
+~/go/src/github.com/lagopus/lagopus-router/yang$ openconfigd -y modules:modules/policy:modules/bgp:modules/interfaces:modules/local-routing:modules/vlan:modules/rib:modules/network-instance:modules/types lagopus-router.yang
+</pre></div>
+</div>
+<p>You can use <code class="docutils literal notranslate"><span class="pre">-y</span></code> option to speficy YANG path. Other valid OPTIONS could be shown specifying <code class="docutils literal notranslate"><span class="pre">-h</span></code> option.</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span># openconfigd --help
+Starting openconfigd.
+Usage:
+  openconfigd [OPTIONS]
+
+Application Options:
+  -c, --config-file= active config file name (default: openconfigd.conf)
+  -p, --config-dir=  config file directory (default: /usr/local/etc)
+  -y, --yang-paths=  comma separated YANG load path directories
+  -2, --two-phase    two phase commit
+  -z, --zero-config  Do not save or load config other than openconfigd.conf
+
+Help Options:
+  -h, --help         Show this help message
+</pre></div>
+</div>
+</div>
+<div class="section" id="running-vsw">
+<h3>6.2.2. Running vsw<a class="headerlink" href="#running-vsw" title="Permalink to this headline">¶</a></h3>
+<p>DPDK related configurations are required every time you run vsw after reboot following below steps.</p>
+<ul class="simple">
+<li>set nr_hugepages</li>
+<li>install kernel modules (driver)</li>
+<li>detach / attach interfaces to DPDK driver</li>
+</ul>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>$ sudo -s
+# echo 1024 &gt; /sys/devices/system/node/node0/hugepages/hugepages-2048kB/nr_hugepages
+# cd ~/dpdk-stable-17.11.1
+~/dpdk-stable-17.11.1# modprobe uio
+~/dpdk-stable-17.11.1# insmod build/kmod/igb_uio.ko
+~/dpdk-stable-17.11.1# ip link set enp0s8 down
+~/dpdk-stable-17.11.1# ip link set enp0s9 down
+~/dpdk-stable-17.11.1# ./usertools/dpdk-devbind.py --bind=igb_uio enp0s8 enp0s9
+</pre></div>
+</div>
+<p>Confirm two interfaces show up under “Network devices using DPDK-compatible driver”.</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>~/dpdk-stable-17.11.1# ./usertools/dpdk-devbind.py -s
+
+Network devices using DPDK-compatible driver
+============================================
+0000:00:08.0 &#39;82540EM Gigabit Ethernet Controller 100e&#39; drv=igb_uio unused=e1000
+0000:00:09.0 &#39;82540EM Gigabit Ethernet Controller 100e&#39; drv=igb_uio unused=e1000
+</pre></div>
+</div>
+<p>Start vsw.</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>$ sudo -s
+# DPDKDIR=~/dpdk-stable-17.11.1
+# env LD_LIBRARY_PATH=$DPDKDIR/build/lib vsw
+</pre></div>
+</div>
+<p>You can add below options when starting vsw to specify Config file and/or to show logs while vsw running.</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span># vsw -h
+Usage of vsw:
+  -f string
+        Config file (default &quot;/usr/local/etc/vsw.conf&quot;)
+  -v    verbose mode
+</pre></div>
+</div>
+<p>Example output when running vsw in verbose mode.</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>root@lagopus:~# env LD_LIBRARY_PATH=$DPDKDIR/build/lib vsw -v
+EAL: Detected 4 lcore(s)
+EAL: Probing VFIO support...
+EAL: PCI device 0000:00:03.0 on NUMA socket -1
+EAL:   Invalid NUMA socket, default to 0
+EAL:   probe driver: 8086:100e net_e1000_em
+EAL: PCI device 0000:00:08.0 on NUMA socket -1
+EAL:   Invalid NUMA socket, default to 0
+EAL:   probe driver: 8086:100e net_e1000_em
+EAL: PCI device 0000:00:09.0 on NUMA socket -1
+EAL:   Invalid NUMA socket, default to 0
+EAL:   probe driver: 8086:100e net_e1000_em
+EAL: PCI device 0000:00:0a.0 on NUMA socket -1
+EAL:   Invalid NUMA socket, default to 0
+EAL:   probe driver: 8086:100e net_e1000_em
+2018/05/09 02:20:46 core list: map[2:{false } 3:{false }]
+2018/05/09 02:20:46 ocdclient: Connect to &quot;localhost:2650&quot;
+2018/05/09 02:20:46 Agent Netlink Agent started.
+2018/05/09 02:20:46 Agent config started.
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="using-cli">
+<h2>6.3. Using CLI<a class="headerlink" href="#using-cli" title="Permalink to this headline">¶</a></h2>
+<p>To start CLI, enter “cli” after running openconfigd and vsw.
+CLI has two modes, “Exec” and “Config”.</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>$ cli
+lagopus&gt;
+</pre></div>
+</div>
+<p>Enter <code class="docutils literal notranslate"><span class="pre">?</span></code> to list available commands.</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>lagopus&gt;
+Exec commands:
+   exit                 End current mode and down to previous mode
+   help                 Description of the interactive help system
+   logout               Exit from EXEC
+   quit                 End current mode and down to previous mode
+   show                 Show running system information
+   configure            Manipulate software configuration information
+</pre></div>
+</div>
+<p>Enter <code class="docutils literal notranslate"><span class="pre">configure</span></code> to move to “Config” mode.</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>lagopus&gt;configure
+lagopus#
+</pre></div>
+</div>
+<p>Follow below steps to enter and apply configurtion:</p>
+<ul class="simple">
+<li><code class="docutils literal notranslate"><span class="pre">set</span></code> to enter configuration</li>
+</ul>
+<p>You can enter <code class="docutils literal notranslate"><span class="pre">?</span></code> any time to see possible config options.</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>lagopus#set interfaces interface if9 config &lt;= enter ?
+   description
+   device
+   driver
+   enabled
+   mtu
+   type
+</pre></div>
+</div>
+<ul class="simple">
+<li><code class="docutils literal notranslate"><span class="pre">show</span></code> to check current configuration.</li>
+</ul>
+<p><code class="docutils literal notranslate"><span class="pre">+</span></code> is shown in front of config which is not applied yet.</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>+    interface if9 {
++        config {
++            enabled true;
++        }
++    }
+</pre></div>
+</div>
+<ul class="simple">
+<li><code class="docutils literal notranslate"><span class="pre">commit</span></code> to apply configuration</li>
+</ul>
+</div>
+<div class="section" id="sample-config-bridge">
+<h2>6.4. Sample Config (bridge)<a class="headerlink" href="#sample-config-bridge" title="Permalink to this headline">¶</a></h2>
+<p>Follow below steps to configure bridge.</p>
+<ul class="simple">
+<li>Configure interface with interface-mode specified (ACCESS/TRUNK)</li>
+<li>Configure subinterface with vlan-id</li>
+<li>Configure network-instance of type L2VFI</li>
+<li>Configure vlans in network-instance</li>
+<li>Assign interface to network-instance</li>
+</ul>
+<p>For example, <code class="docutils literal notranslate"><span class="pre">set</span></code> below config and <code class="docutils literal notranslate"><span class="pre">commit</span></code> to configure Lagopus software router in below diagram.
+Note that <code class="docutils literal notranslate"><span class="pre">device</span></code> is specified in PCIe <code class="docutils literal notranslate"><span class="pre">domain:bus:slot.func</span></code> format.</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>+---------------------------+
+|                           |
+| +-----------------------+ |
+| |                       | |
+| |   Bridge (Vlan 100)   | |
+| |                       | |
+| +----+-------------+----+ |
+|      |             |      |
+|   +--+--+       +--+--+   |
+|   | if0 |       | if1 |   |
++---+--+--+-------+--+--+---+
+       |             |
+       +             +
+     untag         untag
+    vlan 100      vlan 100
+</pre></div>
+</div>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>set interfaces interface if0 config mtu 1514
+set interfaces interface if0 config driver dpdk
+set interfaces interface if0 config device &quot;0000:00:08.0&quot;
+set interfaces interface if0 config type ethernetCsmacd
+set interfaces interface if0 ethernet switched-vlan config interface-mode ACCESS
+set interfaces interface if0 ethernet switched-vlan config access-vlan 100
+set interfaces interface if0 subinterfaces subinterface 0 config enabled true
+set interfaces interface if0 subinterfaces subinterface 0 vlan config vlan-id 100
+set interfaces interface if0 config enabled true
+
+set interfaces interface if1 config mtu 1514
+set interfaces interface if1 config driver dpdk
+set interfaces interface if1 config device &quot;0000:00:09.0&quot;
+set interfaces interface if1 config type ethernetCsmacd
+set interfaces interface if1 ethernet switched-vlan config interface-mode ACCESS
+set interfaces interface if1 ethernet switched-vlan config access-vlan 100
+set interfaces interface if1 subinterfaces subinterface 0 config enabled true
+set interfaces interface if1 subinterfaces subinterface 0 vlan config vlan-id 100
+set interfaces interface if1 config enabled true
+
+set network-instances network-instance vsi1 config type L2VSI
+set network-instances network-instance vsi1 config enabled true
+set network-instances network-instance vsi1 vlans vlan 100 config status ACTIVE
+set network-instances network-instance vsi1 fdb config mac-learning true
+set network-instances network-instance vsi1 fdb config mac-aging-time 300
+set network-instances network-instance vsi1 fdb config maximum-entries 3000
+set network-instances network-instance vsi1 interfaces interface if0 subinterface 0
+set network-instances network-instance vsi1 interfaces interface if1 subinterface 0
+</pre></div>
+</div>
+</div>
+<div class="section" id="sample-config-router">
+<h2>6.5. Sample Config (router)<a class="headerlink" href="#sample-config-router" title="Permalink to this headline">¶</a></h2>
+<p>Follow below steps to configure router.</p>
+<ul class="simple">
+<li>Configure interface with IPv4 address</li>
+<li>Configure network-instance of type L3VRF</li>
+<li>Assign interface to network-instance</li>
+</ul>
+<p>For example, <code class="docutils literal notranslate"><span class="pre">set</span></code> below config and <code class="docutils literal notranslate"><span class="pre">commit</span></code> to configure Lagopus software router in below diagram.</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>+---------------------------+
+|                           |
+| +-----------------------+ |
+| |                       | |
+| |       L3 Routing      | |
+| |                       | |
+| +----+-------------+----+ |
+|      |             |      |
+|   +--+--+       +--+--+   |
+|   | if0 |       | if1 |   |
++---+--+--+-------+--+--+---+
+       |             |
+       +             +
+     untag         untag
+</pre></div>
+</div>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>set interfaces interface if0 config device &quot;0000:00:08.0&quot;
+set interfaces interface if0 config driver dpdk
+set interfaces interface if0 config enabled true
+set interfaces interface if0 config mtu 1514
+set interfaces interface if0 config type ethernetCsmacd
+set interfaces interface if0 subinterfaces subinterface 0 config enabled true
+set interfaces interface if0 subinterfaces subinterface 0 ipv4 addresses address 172.16.110.1 config prefix-length 24
+
+set interfaces interface if1 config device &quot;0000:00:09.0&quot;
+set interfaces interface if1 config driver dpdk
+set interfaces interface if1 config enabled true
+set interfaces interface if1 config mtu 1514
+set interfaces interface if1 config type ethernetCsmacd
+set interfaces interface if1 subinterfaces subinterface 0 config enabled true
+set interfaces interface if1 subinterfaces subinterface 0 ipv4 addresses address 10.10.0.1 config prefix-length 24
+
+set network-instances network-instance vrf1 config type L3VRF
+set network-instances network-instance vrf1 config enabled-address-families IPV4
+set network-instances network-instance vrf1 interfaces interface if0 subinterface 0
+set network-instances network-instance vrf1 interfaces interface if1 subinterface 0
+set network-instances network-instance vrf1 config enabled true
+</pre></div>
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="config-examples.html" class="btn btn-neutral float-right" title="7. Example configurations of Lagopus router" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="installation.html" class="btn btn-neutral" title="5. How to install Lagopus software router" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, NIPPON TELEGRAPH AND TELEPHONE CORPORATION.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'0.1.0',
+            LANGUAGE:'None',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+
+  
+
+  <script type="text/javascript" src="_static/js/theme.js"></script>
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

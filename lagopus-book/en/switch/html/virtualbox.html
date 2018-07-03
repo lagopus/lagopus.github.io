@@ -1,0 +1,384 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>10. Appendix: Installing Lagopus vswitch on VirtualBox VM &mdash; Lagopus software switch book 0.1.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="9. Sample Configuration: Building Layer 2 switch using Ryu as an OpenFlow controller" href="sample-ryu-simplesw.html" /> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="index.html" class="icon icon-home"> Lagopus software switch book
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="preface.html">1. About this book</a></li>
+<li class="toctree-l1"><a class="reference internal" href="introduction.html">2. Introduction to Lagopus software switch</a></li>
+<li class="toctree-l1"><a class="reference internal" href="installation-rawsocket.html">3. Installation with raw-socket configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="installation-dpdk.html">4. Installation with DPDK</a></li>
+<li class="toctree-l1"><a class="reference internal" href="installation-kvm.html">5. Lagopus software switch on KVM Virtual Machine</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cmd-options.html">6. Lagopus software switch command options and examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="lagosh.html">7. Using Lagopus CLI (lagosh)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="datastore.html">8. Lagopus software switch datastore and DSL syntax</a></li>
+<li class="toctree-l1"><a class="reference internal" href="sample-ryu-simplesw.html">9. Sample Configuration: Building Layer 2 switch using Ryu as an OpenFlow controller</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">10. Appendix: Installing Lagopus vswitch on VirtualBox VM</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#software-versions">10.1. Software Versions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#about-virtualbox">10.2. About VirtualBox</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#download-and-install-virtualbox">10.3. Download and Install VirtualBox</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#create-vm">10.4. Create VM</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#vm-network-setting">10.5. VM Network Setting</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#add-two-2-new-adapters-as-data-ports-used-by-lagopus">10.5.1. Add two (2) new adapters as data ports used by Lagopus.</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#configure-port-forwarding-to-enable-ssh-from-host-to-guest">10.5.2. Configure “Port Forwarding” to enable SSH from host to guest.</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#vm-processor-cpu-setting">10.6. VM Processor (CPU) Setting</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#install-guest-os-linux-ubuntu">10.7. Install Guest OS (Linux / Ubuntu)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#next-steps">10.8. Next Steps</a></li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Lagopus software switch book</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>10. Appendix: Installing Lagopus vswitch on VirtualBox VM</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/virtualbox.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="appendix-installing-lagopus-vswitch-on-virtualbox-vm">
+<span id="ref-virtualbox"></span><h1>10. Appendix: Installing Lagopus vswitch on VirtualBox VM<a class="headerlink" href="#appendix-installing-lagopus-vswitch-on-virtualbox-vm" title="Permalink to this headline">¶</a></h1>
+<p>This section describes how to install Lagopus on VirtualBox VM.</p>
+<div class="section" id="software-versions">
+<h2>10.1. Software Versions<a class="headerlink" href="#software-versions" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li>Lagopus software switch: <a class="reference external" href="https://github.com/lagopus/lagopus/releases/tag/v0.2.10">Lagopus software switch 0.2.10</a></li>
+<li>VirtualBox: 5.0.14r105127</li>
+<li>Host OS: Windows 10</li>
+<li>Guest OS: Linux <a class="reference external" href="http://www.ubuntu.com/download/server">Ubuntu Server 16.04 LTS</a></li>
+</ul>
+</div>
+<div class="section" id="about-virtualbox">
+<h2>10.2. About VirtualBox<a class="headerlink" href="#about-virtualbox" title="Permalink to this headline">¶</a></h2>
+<p>ORACLE VirtualBox is x86 and AMD64/Intel64 virtualization product which is freely available as Open Source Software under the terms of the GNU General Public License (GPL) version 2.</p>
+<p>You could run VirtualBox on host OS running Windows, Linux, Macintosh, and Solaris.</p>
+<p>Refer to the <a class="reference external" href="https://www.virtualbox.org/">VirtualBox web site</a> For more information about VirtualBox.</p>
+</div>
+<div class="section" id="download-and-install-virtualbox">
+<h2>10.3. Download and Install VirtualBox<a class="headerlink" href="#download-and-install-virtualbox" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li>Download VirtualBox installation image from: <a class="reference external" href="https://www.virtualbox.org/wiki/Downloads">https://www.virtualbox.org/wiki/Downloads</a></li>
+<li>Install VirtualBox.</li>
+</ul>
+</div>
+<div class="section" id="create-vm">
+<h2>10.4. Create VM<a class="headerlink" href="#create-vm" title="Permalink to this headline">¶</a></h2>
+<ul>
+<li><p class="first">Start “Oracle VM VirtualBox Manager” (Management GUI)</p>
+</li>
+<li><p class="first">Click “New”</p>
+<img alt="_images/virtualbox-001.png" src="_images/virtualbox-001.png" />
+</li>
+<li><p class="first">Enter Name (=any), Type (=Linux), Version (=Ubuntu (64-bit)).</p>
+<img alt="_images/virtualbox-002.png" src="_images/virtualbox-002.png" />
+</li>
+<li><p class="first">Set Memroy Size (&gt;=2GB recommended. 3GB in this example.)</p>
+<img alt="_images/virtualbox-003.png" src="_images/virtualbox-003.png" />
+</li>
+<li><p class="first">Set Hard disk size (default = 8.00 GB)</p>
+<img alt="_images/virtualbox-004.png" src="_images/virtualbox-004.png" />
+</li>
+<li><p class="first">Set Hard disk file type: default = VDI (VirtualBox Disk Image)</p>
+<img alt="_images/virtualbox-005.png" src="_images/virtualbox-005.png" />
+</li>
+<li><p class="first">Set Storage on physical hard disk: default = Dynamically allocated.</p>
+<img alt="_images/virtualbox-006.png" src="_images/virtualbox-006.png" />
+</li>
+<li><p class="first">Set File location and size: default folder name = Name of the VM you’ve specified.</p>
+<img alt="_images/virtualbox-007.png" src="_images/virtualbox-007.png" />
+</li>
+<li><p class="first">Click “Create” and VM will be created.</p>
+</li>
+</ul>
+</div>
+<div class="section" id="vm-network-setting">
+<h2>10.5. VM Network Setting<a class="headerlink" href="#vm-network-setting" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="add-two-2-new-adapters-as-data-ports-used-by-lagopus">
+<h3>10.5.1. Add two (2) new adapters as data ports used by Lagopus.<a class="headerlink" href="#add-two-2-new-adapters-as-data-ports-used-by-lagopus" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li>Adapter 1 (available by default)<ul>
+<li>management port (Internet access, SSH from Host OS)</li>
+</ul>
+</li>
+<li>Adapter 2/3 (new)<ul>
+<li>Lagopus data ports</li>
+</ul>
+</li>
+</ul>
+<p>Steps:</p>
+<ul>
+<li><p class="first">Select VM you just created. Right click and select “Settings”</p>
+<img alt="_images/virtualbox-008.png" src="_images/virtualbox-008.png" />
+</li>
+<li><p class="first">Select “Network” -&gt; “Adapter 2” and configure below. Do the same for “Adapter 3” as well.</p>
+<ul class="simple">
+<li>Enable Network Adapter: enable</li>
+<li>Attached to: Internal Network</li>
+<li>Name: intnet02 (intnet03 for Adapter 3)</li>
+<li>Advanced: Adapter Type: Intel PRO/1000 MT Server (82545EM)</li>
+<li>Advanced: Promiscuous Mode: Allow All</li>
+</ul>
+<img alt="_images/virtualbox-009.png" src="_images/virtualbox-009.png" />
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">NIC supported by DPDK is listed here: <a class="reference external" href="http://dpdk.org/doc/nics">http://dpdk.org/doc/nics</a></p>
+</div>
+</li>
+</ul>
+</div>
+<div class="section" id="configure-port-forwarding-to-enable-ssh-from-host-to-guest">
+<h3>10.5.2. Configure “Port Forwarding” to enable SSH from host to guest.<a class="headerlink" href="#configure-port-forwarding-to-enable-ssh-from-host-to-guest" title="Permalink to this headline">¶</a></h3>
+<ul>
+<li><p class="first">Select “Network” -&gt; “Adapter 1”</p>
+</li>
+<li><p class="first">Click “Advanced: Port Forwarding”</p>
+<img alt="_images/virtualbox-010.png" src="_images/virtualbox-010.png" />
+</li>
+<li><p class="first">Click “+” mark on right. Set below to newly created row.</p>
+<ul class="simple">
+<li>Name: rule_name you like. ex: ssh</li>
+<li>Host Port: port used on Host OS. ex: 2201</li>
+<li>Guest Port: 22 (SSH)</li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div class="section" id="vm-processor-cpu-setting">
+<h2>10.6. VM Processor (CPU) Setting<a class="headerlink" href="#vm-processor-cpu-setting" title="Permalink to this headline">¶</a></h2>
+<ul>
+<li><p class="first">Select “System” -&gt; Processor” to modify CPU cores to be assigned to the VM.</p>
+</li>
+<li><p class="first">2 or more CPU cores are required when using DPDK.</p>
+<img alt="_images/virtualbox-014.png" src="_images/virtualbox-014.png" />
+</li>
+</ul>
+</div>
+<div class="section" id="install-guest-os-linux-ubuntu">
+<h2>10.7. Install Guest OS (Linux / Ubuntu)<a class="headerlink" href="#install-guest-os-linux-ubuntu" title="Permalink to this headline">¶</a></h2>
+<ul>
+<li><p class="first">Download Guest OS ISO:</p>
+<ul class="simple">
+<li><a class="reference external" href="http://www.ubuntu.com/download/server">Ubuntu Server 16.04 LTS</a> (ubuntu-16.04-server-amd64.iso)</li>
+</ul>
+</li>
+<li><p class="first">Start VM by clicking “Start”</p>
+<img alt="_images/virtualbox-012.png" src="_images/virtualbox-012.png" />
+</li>
+<li><p class="first">At “Select start-up disk” diaglog, select ISO you just downloaded and click “Start”</p>
+<img alt="_images/virtualbox-013.png" src="_images/virtualbox-013.png" />
+</li>
+<li><p class="first">Follow Ubuntu install wizard. A few points to be noted are:</p>
+<ul class="simple">
+<li>Select Primary Network Interface: eth0 (Adapter 1)</li>
+<li>No automatic updates (for testing purpose to make package predictable)</li>
+<li>Software installation: OpenSSH server</li>
+</ul>
+</li>
+</ul>
+<p>Once installed, SSH to localhost:&lt;port&gt; where &lt;port&gt; is the “Host port” you configured in “Port Forwarding”.</p>
+</div>
+<div class="section" id="next-steps">
+<h2>10.8. Next Steps<a class="headerlink" href="#next-steps" title="Permalink to this headline">¶</a></h2>
+<p>Follow steps in <a class="reference internal" href="installation-rawsocket.html#ref-installation-rawsocket"><span class="std std-ref">Installation with raw-socket configuration</span></a> or <a class="reference internal" href="installation-dpdk.html#ref-installation-dpdk"><span class="std std-ref">Installation with DPDK</span></a> to continue Lagopus software switch and configuration.</p>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+      
+        <a href="sample-ryu-simplesw.html" class="btn btn-neutral" title="9. Sample Configuration: Building Layer 2 switch using Ryu as an OpenFlow controller" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2016, NIPPON TELEGRAPH AND TELEPHONE CORPORATION.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'0.1.0',
+            LANGUAGE:'None',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+
+  
+
+  <script type="text/javascript" src="_static/js/theme.js"></script>
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,656 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>7. Example configurations of Lagopus router &mdash; Lagopus software router book 0.1.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="8. Appendix: How to debug Lagopus software router" href="debug.html" />
+    <link rel="prev" title="6. Configuring and running Lagopus software router" href="config-basic.html" /> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="index.html" class="icon icon-home"> Lagopus software router book
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="preface.html">1. About this book</a></li>
+<li class="toctree-l1"><a class="reference internal" href="introduction.html">2. Introduction to Lagopus software router</a></li>
+<li class="toctree-l1"><a class="reference internal" href="architecture.html">3. Lagopus software router architecture</a></li>
+<li class="toctree-l1"><a class="reference internal" href="installation-dpdk.html">4. How to install DPDK for Lagopus software router</a></li>
+<li class="toctree-l1"><a class="reference internal" href="installation.html">5. How to install Lagopus software router</a></li>
+<li class="toctree-l1"><a class="reference internal" href="config-basic.html">6. Configuring and running Lagopus software router</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">7. Example configurations of Lagopus router</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#layer-2-with-multiple-vlans">7.1. Layer 2 with multiple Vlans</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#sample-diagram-and-config">7.1.1. Sample diagram and config</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#layer-3-with-multiple-vlans">7.2. Layer 3 with multiple Vlans</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#id1">7.2.1. Sample diagram and config</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#layer-3-with-multiple-vrfs">7.3. Layer 3 with multiple VRFs</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#id2">7.3.1. Sample diagram and config</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="debug.html">8. Appendix: How to debug Lagopus software router</a></li>
+<li class="toctree-l1"><a class="reference internal" href="virtualbox.html">9. Appendix: How to setup VM for Lagopus software router on VirtualBox</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Lagopus software router book</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>7. Example configurations of Lagopus router</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/config-examples.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="example-configurations-of-lagopus-router">
+<span id="ref-config-examples"></span><h1>7. Example configurations of Lagopus router<a class="headerlink" href="#example-configurations-of-lagopus-router" title="Permalink to this headline">¶</a></h1>
+<p>In this section, we will introduce configuration examples of Lagopus router in various use cases.</p>
+<ul class="simple">
+<li>Layer 2 with multiple Vlans</li>
+<li>Layer 3 with multiple Vlans</li>
+<li>Layer 3 with multiple VRFs</li>
+</ul>
+<p>You can find more examples under : <a class="reference external" href="https://github.com/lagopus/lagopus-router/tree/master/samples/">https://github.com/lagopus/lagopus-router/tree/master/samples/</a></p>
+<div class="section" id="layer-2-with-multiple-vlans">
+<h2>7.1. Layer 2 with multiple Vlans<a class="headerlink" href="#layer-2-with-multiple-vlans" title="Permalink to this headline">¶</a></h2>
+<ul>
+<li><p class="first">To configure multiple Vlans, create single (1) L2VSI network-instance with multiple vlans configured with ACTIVE status.</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>set network-instances network-instance vsi1 config type L2VSI
+set network-instances network-instance vsi1 config enabled true
+set network-instances network-instance vsi1 vlans vlan 100 config status ACTIVE
+set network-instances network-instance vsi1 vlans vlan 200 config status ACTIVE
+</pre></div>
+</div>
+</li>
+<li><p class="first">subinterface should be assigned to the network-instance (<code class="docutils literal notranslate"><span class="pre">vsi1</span></code> in this example).</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>set network-instances network-instance vsi1 interfaces interface if0 subinterface 0
+set network-instances network-instance vsi1 interfaces interface if1 subinterface 0
+set network-instances network-instance vsi1 interfaces interface if2 subinterface 100
+set network-instances network-instance vsi1 interfaces interface if2 subinterface 200
+</pre></div>
+</div>
+</li>
+<li><p class="first">vlan-id should be configured for both interface and subinterface level. Example below shows interface and subinterface setting for both ACCESS and TRUNK interfaces.</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>set interfaces interface if1 ethernet switched-vlan config interface-mode ACCESS
+set interfaces interface if1 ethernet switched-vlan config access-vlan 200
+set interfaces interface if1 subinterfaces subinterface 0 vlan config vlan-id 200
+
+set interfaces interface if2 ethernet switched-vlan config interface-mode TRUNK
+set interfaces interface if2 ethernet switched-vlan config trunk-vlans 100
+set interfaces interface if2 subinterfaces subinterface 100 vlan config vlan-id 100
+</pre></div>
+</div>
+</li>
+</ul>
+<div class="section" id="sample-diagram-and-config">
+<h3>7.1.1. Sample diagram and config<a class="headerlink" href="#sample-diagram-and-config" title="Permalink to this headline">¶</a></h3>
+<p>Refer to below diagram and config commands to configure Lagopus software router as Layer 2 switch with multiple Vlans.</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>+--------------------------------------------------------------+
+|                                                              |
+| +----------------------------------------------------------+ |
+| | VSI1                                                     | |
+| |  +-----------------+               +-----------------+   | |
+| |  |   Bridge        |               |   Bridge        |   | |
+| |  |   Vlan100       |               |   Vlan200       |   | |
+| |  +---+---------+---+               +----+--------+---+   | |
+| |      |         |                        |        |       | |
+| +----------------------------------------------------------+ |
+|        |         |                        |        |         |
+|        |         |    +-------------------+        |         |
+|        |         |    |                            |         |
+|        |         +-------------------+             |         |
+|        |              |              |             |         |
+|    +---+---+      +---+---+      +---+---+     +---+---+     |
+|    | if0.0 |      | if1.0 |      | if2.0 |     | if2.1 |     |
+|    +---+---+      +---+---+      +---+---+     +---+---+     |
+|        | VID:100      | VID:200      | VID:100     | VID:200 |
+|        |              |              +------+------+         |
+|        |              |                     |                |
+|     +--+--+        +--+--+               +--+--+             |
+|     | if0 |        | if1 |               | if2 |             |
++-----+--+--+--------+--+--+---------------+--+--+-------------+
+         |              |                     |
+         |              |                     |
+         +              +                     +
+       untag           untag                 tagged
+      vlan 100        vlan 200            vlan 100,200
+</pre></div>
+</div>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>set interfaces interface if0 config mtu 1514
+set interfaces interface if0 config driver dpdk
+set interfaces interface if0 config device 0000:00:08.0
+set interfaces interface if0 config type ethernetCsmacd
+set interfaces interface if0 ethernet switched-vlan config interface-mode ACCESS
+set interfaces interface if0 ethernet switched-vlan config access-vlan 100
+set interfaces interface if0 subinterfaces subinterface 0 config enabled true
+set interfaces interface if0 subinterfaces subinterface 0 vlan config vlan-id 100
+set interfaces interface if0 config enabled true
+
+set interfaces interface if1 config mtu 1514
+set interfaces interface if1 config driver dpdk
+set interfaces interface if1 config device 0000:00:09.0
+set interfaces interface if1 config type ethernetCsmacd
+set interfaces interface if1 ethernet switched-vlan config interface-mode ACCESS
+set interfaces interface if1 ethernet switched-vlan config access-vlan 200
+set interfaces interface if1 subinterfaces subinterface 0 vlan config vlan-id 200
+set interfaces interface if1 subinterfaces subinterface 0 config enabled true
+set interfaces interface if1 config enabled true
+
+set interfaces interface if2 config mtu 1518
+set interfaces interface if2 config driver dpdk
+set interfaces interface if2 config device 0000:00:0a.0
+set interfaces interface if2 config type ethernetCsmacd
+set interfaces interface if2 ethernet switched-vlan config interface-mode TRUNK
+set interfaces interface if2 ethernet switched-vlan config trunk-vlans 100
+set interfaces interface if2 ethernet switched-vlan config trunk-vlans 200
+set interfaces interface if2 subinterfaces subinterface 100 vlan config vlan-id 100
+set interfaces interface if2 subinterfaces subinterface 100 config enabled true
+set interfaces interface if2 config enabled true
+set interfaces interface if2 subinterfaces subinterface 200 vlan config vlan-id 200
+set interfaces interface if2 subinterfaces subinterface 200 config enabled true
+set interfaces interface if2 config enabled true
+
+# network-instnace vsi1
+set network-instances network-instance vsi1 config type L2VSI
+set network-instances network-instance vsi1 config enabled true
+set network-instances network-instance vsi1 vlans vlan 100 config status ACTIVE
+set network-instances network-instance vsi1 vlans vlan 200 config status ACTIVE
+set network-instances network-instance vsi1 fdb config mac-learning true
+set network-instances network-instance vsi1 fdb config mac-aging-time 300
+set network-instances network-instance vsi1 fdb config maximum-entries 3000
+set network-instances network-instance vsi1 interfaces interface if0 subinterface 0
+set network-instances network-instance vsi1 interfaces interface if1 subinterface 0
+set network-instances network-instance vsi1 interfaces interface if2 subinterface 100
+set network-instances network-instance vsi1 interfaces interface if2 subinterface 200
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="layer-3-with-multiple-vlans">
+<h2>7.2. Layer 3 with multiple Vlans<a class="headerlink" href="#layer-3-with-multiple-vlans" title="Permalink to this headline">¶</a></h2>
+<p>Follow below steps to configure Layer 3 router with multiple Vlans.</p>
+<ul class="simple">
+<li>Create rifs and assign vlan-id with interface-mode ACCESS. Note that driver of rif interface is <code class="docutils literal notranslate"><span class="pre">local</span></code> while it was <code class="docutils literal notranslate"><span class="pre">dpdk</span></code> for physical interface.</li>
+<li>Assign IPv4 address to the rif which will be routers’ own address.</li>
+</ul>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>set interfaces interface rif0 config driver local
+set interfaces interface rif0 ethernet switched-vlan config interface-mode ACCESS
+set interfaces interface rif0 ethernet switched-vlan config access-vlan 100
+set interfaces interface rif0 subinterfaces subinterface 0 vlan config vlan-id 100
+set interfaces interface rif0 subinterfaces subinterface 0 ipv4 addresses address 10.0.0.1 config prefix-length 24
+</pre></div>
+</div>
+<ul class="simple">
+<li>Assign rif subinterface to L2VSI network-instance.</li>
+</ul>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>set network-instances network-instance vsi1 interfaces interface rif0 subinterface 0
+</pre></div>
+</div>
+<ul class="simple">
+<li>Assign rif subinterface to L3VRF network-instance</li>
+</ul>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>set network-instances network-instance vrf1 interfaces interface rif0 subinterface 0
+</pre></div>
+</div>
+<div class="section" id="id1">
+<h3>7.2.1. Sample diagram and config<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h3>
+<p>Refer to below diagram and config commands to configure Lagopus software router as Layer 3 router with multiple Vlans.</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>+--------------------------------------------------------------+
+|                                                              |
+| +----------------------------------------------------------+ |
+| |                                                          | |
+| | VRF1                                                     | |
+| |                                                          | |
+| +-------------+---------------------------------+----------+ |
+|               |                                 |            |
+| +------+  +---+----+              +------+  +---+----+       |
+| | rif0 +--+ rif0.0 |              | rif1 +--+ rif1.0 |       |
+| +------+  +---+----+              +------+  +---+----+       |
+|               |                                 |            |
+| +----------------------------------------------------------+ |
+| | VSI1        |                                 |          | |
+| |  +----------+------+               +----------+------+   | |
+| |  |   Bridge        |               |   Bridge        |   | |
+| |  |   Vlan100       |               |   Vlan200       |   | |
+| |  +---+---------+---+               +----+--------+---+   | |
+| |      |         |                        |        |       | |
+| +----------------------------------------------------------+ |
+|        |         |                        |        |         |
+|        |         |    +-------------------+        |         |
+|        |         |    |                            |         |
+|        |         +-------------------+             |         |
+|        |              |              |             |         |
+|    +---+---+      +---+---+      +---+---+     +---+---+     |
+|    | if0.0 |      | if1.0 |      | if2.0 |     | if2.1 |     |
+|    +---+---+      +---+---+      +---+---+     +---+---+     |
+|        | VID:100      | VID:200      | VID:100     | VID:200 |
+|        |              |              +------+------+         |
+|        |              |                     |                |
+|     +--+--+        +--+--+               +--+--+             |
+|     | if0 |        | if1 |               | if2 |             |
++-----+--+--+--------+--+--+---------------+--+--+-------------+
+         |              |                     |
+         |              |                     |
+         +              +                     +
+       untag           untag                 tagged
+      vlan 100        vlan 200            vlan 100,200
+</pre></div>
+</div>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>set interfaces interface if0 config mtu 1514
+set interfaces interface if0 config driver dpdk
+set interfaces interface if0 config device 0000:00:08.0
+set interfaces interface if0 config type ethernetCsmacd
+set interfaces interface if0 ethernet switched-vlan config interface-mode ACCESS
+set interfaces interface if0 ethernet switched-vlan config access-vlan 100
+set interfaces interface if0 subinterfaces subinterface 0 config enabled true
+set interfaces interface if0 subinterfaces subinterface 0 vlan config vlan-id 100
+set interfaces interface if0 config enabled true
+
+set interfaces interface if1 config mtu 1514
+set interfaces interface if1 config driver dpdk
+set interfaces interface if1 config device 0000:00:09.0
+set interfaces interface if1 config type ethernetCsmacd
+set interfaces interface if1 ethernet switched-vlan config interface-mode ACCESS
+set interfaces interface if1 ethernet switched-vlan config access-vlan 200
+set interfaces interface if1 subinterfaces subinterface 0 vlan config vlan-id 200
+set interfaces interface if1 subinterfaces subinterface 0 config enabled true
+set interfaces interface if1 config enabled true
+
+set interfaces interface if2 config mtu 1518
+set interfaces interface if2 config driver dpdk
+set interfaces interface if2 config device 0000:00:0a.0
+set interfaces interface if2 config type ethernetCsmacd
+set interfaces interface if2 ethernet switched-vlan config interface-mode TRUNK
+set interfaces interface if2 ethernet switched-vlan config trunk-vlans 100
+set interfaces interface if2 ethernet switched-vlan config trunk-vlans 200
+set interfaces interface if2 subinterfaces subinterface 100 vlan config vlan-id 100
+set interfaces interface if2 subinterfaces subinterface 100 config enabled true
+set interfaces interface if2 config enabled true
+set interfaces interface if2 subinterfaces subinterface 200 vlan config vlan-id 200
+set interfaces interface if2 subinterfaces subinterface 200 config enabled true
+set interfaces interface if2 config enabled true
+
+set interfaces interface rif0 config mtu 1514
+set interfaces interface rif0 config driver local
+set interfaces interface rif0 config type ethernetCsmacd
+set interfaces interface rif0 ethernet switched-vlan config interface-mode ACCESS
+set interfaces interface rif0 ethernet switched-vlan config access-vlan 100
+set interfaces interface rif0 subinterfaces subinterface 0 config enabled true
+set interfaces interface rif0 subinterfaces subinterface 0 vlan config vlan-id 100
+set interfaces interface rif0 subinterfaces subinterface 0 ipv4 addresses address 10.0.0.1 config prefix-length 24
+set interfaces interface rif0 config enabled true
+
+set interfaces interface rif1 config mtu 1514
+set interfaces interface rif1 config driver local
+set interfaces interface rif1 config type ethernetCsmacd
+set interfaces interface rif1 ethernet switched-vlan config interface-mode ACCESS
+set interfaces interface rif1 ethernet switched-vlan config access-vlan 200
+set interfaces interface rif1 subinterfaces subinterface 0 config enabled true
+set interfaces interface rif1 subinterfaces subinterface 0 vlan config vlan-id 200
+set interfaces interface rif1 subinterfaces subinterface 0 ipv4 addresses address 10.1.0.1 config prefix-length 24
+set interfaces interface rif1 config enabled true
+
+# network-instance vsi1
+set network-instances network-instance vsi1 config type L2VSI
+set network-instances network-instance vsi1 config enabled true
+set network-instances network-instance vsi1 vlans vlan 100 config status ACTIVE
+set network-instances network-instance vsi1 vlans vlan 200 config status ACTIVE
+set network-instances network-instance vsi1 fdb config mac-learning true
+set network-instances network-instance vsi1 fdb config mac-aging-time 300
+set network-instances network-instance vsi1 fdb config maximum-entries 3000
+set network-instances network-instance vsi1 interfaces interface if0 subinterface 0
+set network-instances network-instance vsi1 interfaces interface if1 subinterface 0
+set network-instances network-instance vsi1 interfaces interface if2 subinterface 100
+set network-instances network-instance vsi1 interfaces interface if2 subinterface 200
+set network-instances network-instance vsi1 interfaces interface rif0 subinterface 0
+set network-instances network-instance vsi1 interfaces interface rif1 subinterface 0
+
+# network-instnace vrf1
+set network-instances network-instance vrf1 config type L3VRF
+set network-instances network-instance vrf1 config enabled true
+set network-instances network-instance vrf1 config enabled-address-families IPV4
+set network-instances network-instance vrf1 interfaces interface rif0 subinterface 0
+set network-instances network-instance vrf1 interfaces interface rif1 subinterface 0
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="layer-3-with-multiple-vrfs">
+<h2>7.3. Layer 3 with multiple VRFs<a class="headerlink" href="#layer-3-with-multiple-vrfs" title="Permalink to this headline">¶</a></h2>
+<p>VRFs are used to separate routing table to allow IP address overlap amoung multiple routing domains. (ex: when multiple tenants are attached to the same router)</p>
+<p>Follow below steps to configure Layer 3 router with multiple VRFs.</p>
+<ul class="simple">
+<li>Create interfaces with same IPv4 network address.</li>
+</ul>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>set interfaces interface if1 subinterfaces subinterface 0 ipv4 addresses address 10.0.0.1 config prefix-length 24
+set interfaces interface if2 subinterfaces subinterface 0 ipv4 addresses address 10.0.0.1 config prefix-length 24
+</pre></div>
+</div>
+<ul class="simple">
+<li>Create multiple VRFs and assign interfaces.</li>
+</ul>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>set network-instances network-instance vrf1 interfaces interface if2 subinterface 0
+set network-instances network-instance vrf2 interfaces interface if3 subinterface 0
+</pre></div>
+</div>
+<div class="section" id="id2">
+<h3>7.3.1. Sample diagram and config<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h3>
+<p>Refer to below diagram and config commands to configure Lagopus software router as Layer 3 router with multiple VRFs.</p>
+<p>Note that two rifs, rif0.0/rif1.0, are also created and attached to vlan100 so you can test reachability via VRF1 and VRF2 from client attached to if0.</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>+-------------------------------------------------------------------+
+|                                                                   |
+| +----------------------------+     +----------------------------+ |
+| |                            |     |                            | |
+| |  VRF1                      |     |  VRF2                      | |
+| |                            |     |                            | |
+| +-------------+----+---------+     +--------------+-----+-------+ |
+|               |    |                              |     |         |
+|               |    |                +-------------+     |         |
+|               |    |                |                   |         |
+|               |    +------------------------+           |         |
+|               |                     |       |           |         |
+| +------+  +---+----+  +------+  +---+----+  |           |         |
+| | rif0 +--+ rif0.0 |  | rif1 +--+ rif1.0 |  |           |         |
+| +------+  +---+----+  +------+  +---+----+  |           |         |
+|               |                     |       |           |         |
+| +----------------------------------------+  |           |         |
+| | VSI1        |                     |    |  |           |         |
+| |  +----------+---------------------+--+ |  |           |         |
+| |  |   Bridge                          | |  |           |         |
+| |  |   Vlan100                         | |  |           |         |
+| |  +---+-------------------------------+ |  |           |         |
+| |      |                                 |  |           |         |
+| +----------------------------------------+  |           |         |
+|        |                                    |           |         |
+|    +---+---+                            +---+---+   +---+---+     |
+|    | if0.0 |                            | if1.0 |   | if2.0 |     |
+|    +---+---+                            +---+---+   +---+---+     |
+|        | VID:100                    VID:200 |           | VID:300 |
+|        |                                    |           |         |
+|        |                                    |           |         |
+|     +--+--+                              +--+--+     +--+--+      |
+|     | if0 |                              | if1 |     | if2 |      |
++-----+--+--+------------------------------+--+--+-----+--+--+------+
+         |                                    |           |
+         |                                    |           |
+         +                                    +           +
+       untag                                untag       untag
+      vlan 100                             vlan 200    vlan 300
+</pre></div>
+</div>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>set interfaces interface if0 config mtu 1514
+set interfaces interface if0 config driver dpdk
+set interfaces interface if0 config device 0000:00:08.0
+set interfaces interface if0 config type ethernetCsmacd
+set interfaces interface if0 ethernet switched-vlan config interface-mode ACCESS
+set interfaces interface if0 ethernet switched-vlan config access-vlan 100
+set interfaces interface if0 subinterfaces subinterface 0 vlan config vlan-id 100
+set interfaces interface if0 subinterfaces subinterface 0 config enabled true
+set interfaces interface if0 config enabled true
+
+set interfaces interface if1 config mtu 1514
+set interfaces interface if1 config driver dpdk
+set interfaces interface if1 config device 0000:00:09.0
+set interfaces interface if1 config type ethernetCsmacd
+set interfaces interface if1 ethernet switched-vlan config interface-mode ACCESS
+set interfaces interface if1 ethernet switched-vlan config access-vlan 200
+set interfaces interface if1 subinterfaces subinterface 0 vlan config vlan-id 200
+set interfaces interface if1 subinterfaces subinterface 0 ipv4 addresses address 10.0.0.1 config prefix-length 24
+set interfaces interface if1 subinterfaces subinterface 0 config enabled true
+set interfaces interface if1 config enabled true
+
+set interfaces interface if2 config mtu 1514
+set interfaces interface if2 config driver dpdk
+set interfaces interface if2 config device 0000:00:0a.0
+set interfaces interface if2 config type ethernetCsmacd
+set interfaces interface if2 ethernet switched-vlan config interface-mode ACCESS
+set interfaces interface if2 ethernet switched-vlan config access-vlan 300
+set interfaces interface if2 subinterfaces subinterface 0 vlan config vlan-id 300
+set interfaces interface if2 subinterfaces subinterface 0 ipv4 addresses address 10.0.0.1 config prefix-length 24
+set interfaces interface if2 subinterfaces subinterface 0 config enabled true
+set interfaces interface if2 config enabled true
+
+set interfaces interface rif0 config mtu 1514
+set interfaces interface rif0 config driver local
+set interfaces interface rif0 config type ethernetCsmacd
+set interfaces interface rif0 ethernet switched-vlan config interface-mode ACCESS
+set interfaces interface rif0 ethernet switched-vlan config access-vlan 100
+set interfaces interface rif0 subinterfaces subinterface 0 config enabled true
+set interfaces interface rif0 subinterfaces subinterface 0 vlan config vlan-id 100
+set interfaces interface rif0 subinterfaces subinterface 0 ipv4 addresses address 192.168.0.1 config prefix-length 24
+set interfaces interface rif0 config enabled true
+
+set interfaces interface rif1 config mtu 1514
+set interfaces interface rif1 config driver local
+set interfaces interface rif1 config type ethernetCsmacd
+set interfaces interface rif1 ethernet switched-vlan config interface-mode ACCESS
+set interfaces interface rif1 ethernet switched-vlan config access-vlan 100
+set interfaces interface rif1 subinterfaces subinterface 0 config enabled true
+set interfaces interface rif1 subinterfaces subinterface 0 vlan config vlan-id 100
+set interfaces interface rif1 subinterfaces subinterface 0 ipv4 addresses address 192.168.0.2 config prefix-length 24
+set interfaces interface rif1 config enabled true
+
+# network-instnace vsi1
+set network-instances network-instance vsi1 config type L2VSI
+set network-instances network-instance vsi1 config enabled true
+set network-instances network-instance vsi1 vlans vlan 100 config status ACTIVE
+set network-instances network-instance vsi1 fdb config mac-learning true
+set network-instances network-instance vsi1 fdb config mac-aging-time 300
+set network-instances network-instance vsi1 fdb config maximum-entries 3000
+set network-instances network-instance vsi1 interfaces interface if0 subinterface 0
+set network-instances network-instance vsi1 interfaces interface rif0 subinterface 0
+set network-instances network-instance vsi1 interfaces interface rif1 subinterface 0
+
+# network-instnace vrf1
+set network-instances network-instance vrf1 config type L3VRF
+set network-instances network-instance vrf1 config enabled true
+set network-instances network-instance vrf1 config enabled-address-families IPV4
+set network-instances network-instance vrf1 interfaces interface rif0 subinterface 0
+set network-instances network-instance vrf1 interfaces interface if1 subinterface 0
+
+# network-instnace vrf2
+set network-instances network-instance vrf2 config type L3VRF
+set network-instances network-instance vrf2 config enabled true
+set network-instances network-instance vrf2 config enabled-address-families IPV4
+set network-instances network-instance vrf2 interfaces interface rif1 subinterface 0
+set network-instances network-instance vrf2 interfaces interface if2 subinterface 0
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="debug.html" class="btn btn-neutral float-right" title="8. Appendix: How to debug Lagopus software router" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="config-basic.html" class="btn btn-neutral" title="6. Configuring and running Lagopus software router" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, NIPPON TELEGRAPH AND TELEPHONE CORPORATION.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'0.1.0',
+            LANGUAGE:'None',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+
+  
+
+  <script type="text/javascript" src="_static/js/theme.js"></script>
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

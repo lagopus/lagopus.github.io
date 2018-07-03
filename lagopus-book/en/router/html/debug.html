@@ -1,0 +1,277 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>8. Appendix: How to debug Lagopus software router &mdash; Lagopus software router book 0.1.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="9. Appendix: How to setup VM for Lagopus software router on VirtualBox" href="virtualbox.html" />
+    <link rel="prev" title="7. Example configurations of Lagopus router" href="config-examples.html" /> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="index.html" class="icon icon-home"> Lagopus software router book
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="preface.html">1. About this book</a></li>
+<li class="toctree-l1"><a class="reference internal" href="introduction.html">2. Introduction to Lagopus software router</a></li>
+<li class="toctree-l1"><a class="reference internal" href="architecture.html">3. Lagopus software router architecture</a></li>
+<li class="toctree-l1"><a class="reference internal" href="installation-dpdk.html">4. How to install DPDK for Lagopus software router</a></li>
+<li class="toctree-l1"><a class="reference internal" href="installation.html">5. How to install Lagopus software router</a></li>
+<li class="toctree-l1"><a class="reference internal" href="config-basic.html">6. Configuring and running Lagopus software router</a></li>
+<li class="toctree-l1"><a class="reference internal" href="config-examples.html">7. Example configurations of Lagopus router</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">8. Appendix: How to debug Lagopus software router</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#running-vsw-in-verbose-mode">8.1. Running vsw in verbose mode</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#building-vsw-with-debug-flag">8.2. Building vsw with DEBUG flag</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="virtualbox.html">9. Appendix: How to setup VM for Lagopus software router on VirtualBox</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Lagopus software router book</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>8. Appendix: How to debug Lagopus software router</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/debug.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="appendix-how-to-debug-lagopus-software-router">
+<span id="ref-debug"></span><h1>8. Appendix: How to debug Lagopus software router<a class="headerlink" href="#appendix-how-to-debug-lagopus-software-router" title="Permalink to this headline">¶</a></h1>
+<p>This section describes how to debug issues of Lagopus software router.</p>
+<div class="section" id="running-vsw-in-verbose-mode">
+<h2>8.1. Running vsw in verbose mode<a class="headerlink" href="#running-vsw-in-verbose-mode" title="Permalink to this headline">¶</a></h2>
+<p>The most simple way to start debugging is to run vsw in verbose mode.</p>
+<p>To run vsw in verbose mode, use <code class="docutils literal notranslate"><span class="pre">-v</span></code> option when running vsw.</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span># vsw -h
+Usage of vsw:
+  -f string
+        Config file (default &quot;/usr/local/etc/vsw.conf&quot;)
+  -v    verbose mode
+</pre></div>
+</div>
+<p>Example output when running vsw in verbose mode.</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>root@lagopus:~# env LD_LIBRARY_PATH=$DPDKDIR/build/lib vsw -v
+EAL: Detected 4 lcore(s)
+EAL: Probing VFIO support...
+EAL: PCI device 0000:00:03.0 on NUMA socket -1
+EAL:   Invalid NUMA socket, default to 0
+EAL:   probe driver: 8086:100e net_e1000_em
+EAL: PCI device 0000:00:08.0 on NUMA socket -1
+EAL:   Invalid NUMA socket, default to 0
+EAL:   probe driver: 8086:100e net_e1000_em
+EAL: PCI device 0000:00:09.0 on NUMA socket -1
+EAL:   Invalid NUMA socket, default to 0
+EAL:   probe driver: 8086:100e net_e1000_em
+EAL: PCI device 0000:00:0a.0 on NUMA socket -1
+EAL:   Invalid NUMA socket, default to 0
+EAL:   probe driver: 8086:100e net_e1000_em
+2018/05/09 02:20:46 core list: map[2:{false } 3:{false }]
+2018/05/09 02:20:46 ocdclient: Connect to &quot;localhost:2650&quot;
+2018/05/09 02:20:46 Agent Netlink Agent started.
+2018/05/09 02:20:46 Agent config started.
+</pre></div>
+</div>
+</div>
+<div class="section" id="building-vsw-with-debug-flag">
+<h2>8.2. Building vsw with DEBUG flag<a class="headerlink" href="#building-vsw-with-debug-flag" title="Permalink to this headline">¶</a></h2>
+<p>You can build Lagopus software router (vsw) with DEBUG flag to enable debug log following below steps.</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>$ cd ~/go/src/github.com/lagopus/vsw
+~/go/src/github.com/lagopus/vsw$ export CGO_CFLAGS=&quot;-D DEBUG&quot;
+~/go/src/github.com/lagopus/vsw$ go build
+~/go/src/github.com/lagopus/vsw$ go install
+</pre></div>
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="virtualbox.html" class="btn btn-neutral float-right" title="9. Appendix: How to setup VM for Lagopus software router on VirtualBox" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="config-examples.html" class="btn btn-neutral" title="7. Example configurations of Lagopus router" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, NIPPON TELEGRAPH AND TELEPHONE CORPORATION.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'0.1.0',
+            LANGUAGE:'None',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+
+  
+
+  <script type="text/javascript" src="_static/js/theme.js"></script>
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

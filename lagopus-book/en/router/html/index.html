@@ -1,0 +1,292 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Lagopus Software Router &mdash; Lagopus software router book 0.1.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="1. About this book" href="preface.html" /> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="#" class="icon icon-home"> Lagopus software router book
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="preface.html">1. About this book</a></li>
+<li class="toctree-l1"><a class="reference internal" href="introduction.html">2. Introduction to Lagopus software router</a></li>
+<li class="toctree-l1"><a class="reference internal" href="architecture.html">3. Lagopus software router architecture</a></li>
+<li class="toctree-l1"><a class="reference internal" href="installation-dpdk.html">4. How to install DPDK for Lagopus software router</a></li>
+<li class="toctree-l1"><a class="reference internal" href="installation.html">5. How to install Lagopus software router</a></li>
+<li class="toctree-l1"><a class="reference internal" href="config-basic.html">6. Configuring and running Lagopus software router</a></li>
+<li class="toctree-l1"><a class="reference internal" href="config-examples.html">7. Example configurations of Lagopus router</a></li>
+<li class="toctree-l1"><a class="reference internal" href="debug.html">8. Appendix: How to debug Lagopus software router</a></li>
+<li class="toctree-l1"><a class="reference internal" href="virtualbox.html">9. Appendix: How to setup VM for Lagopus software router on VirtualBox</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="#">Lagopus software router book</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="#">Docs</a> &raquo;</li>
+        
+      <li>Lagopus Software Router</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/index.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="lagopus-software-router">
+<h1>Lagopus Software Router<a class="headerlink" href="#lagopus-software-router" title="Permalink to this headline">¶</a></h1>
+<p>Contents:</p>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="preface.html">1. About this book</a></li>
+<li class="toctree-l1"><a class="reference internal" href="introduction.html">2. Introduction to Lagopus software router</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="introduction.html#hardware-requirement">2.1. Hardware requirement</a></li>
+<li class="toctree-l2"><a class="reference internal" href="introduction.html#software-requirement">2.2. Software requirement</a></li>
+<li class="toctree-l2"><a class="reference internal" href="introduction.html#development-support">2.3. Development &amp; Support</a></li>
+<li class="toctree-l2"><a class="reference internal" href="introduction.html#license">2.4. License</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="architecture.html">3. Lagopus software router architecture</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="architecture.html#data-store-and-cli-openconfigd">3.1. Data Store and CLI (Openconfigd)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="architecture.html#routing-agent-zebra">3.2. Routing Agent (Zebra)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="architecture.html#data-plane-vsw">3.3. Data Plane (vsw)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="installation-dpdk.html">4. How to install DPDK for Lagopus software router</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="installation-dpdk.html#minimum-hardware-requirement">4.1. Minimum hardware requirement</a></li>
+<li class="toctree-l2"><a class="reference internal" href="installation-dpdk.html#software-versions">4.2. Software Versions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="installation-dpdk.html#installation-steps">4.3. Installation steps</a></li>
+<li class="toctree-l2"><a class="reference internal" href="installation-dpdk.html#setup-dpdk">4.4. Setup DPDK</a></li>
+<li class="toctree-l2"><a class="reference internal" href="installation-dpdk.html#nic-network-interface-card-assignment">4.5. NIC (Network Interface Card) assignment</a></li>
+<li class="toctree-l2"><a class="reference internal" href="installation-dpdk.html#next-steps">4.6. Next Steps</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="installation.html">5. How to install Lagopus software router</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="installation.html#install-dpdk">5.1. Install DPDK</a></li>
+<li class="toctree-l2"><a class="reference internal" href="installation.html#install-go">5.2. Install Go</a></li>
+<li class="toctree-l2"><a class="reference internal" href="installation.html#install-openconfigd-and-cli">5.3. Install openconfigd and cli</a></li>
+<li class="toctree-l2"><a class="reference internal" href="installation.html#install-vsw">5.4. Install vsw</a></li>
+<li class="toctree-l2"><a class="reference internal" href="installation.html#download-lagopus-router">5.5. Download lagopus-router</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="config-basic.html">6. Configuring and running Lagopus software router</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="config-basic.html#configuration-files">6.1. Configuration files</a></li>
+<li class="toctree-l2"><a class="reference internal" href="config-basic.html#running-lagopus-software-router">6.2. Running Lagopus software router</a></li>
+<li class="toctree-l2"><a class="reference internal" href="config-basic.html#using-cli">6.3. Using CLI</a></li>
+<li class="toctree-l2"><a class="reference internal" href="config-basic.html#sample-config-bridge">6.4. Sample Config (bridge)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="config-basic.html#sample-config-router">6.5. Sample Config (router)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="config-examples.html">7. Example configurations of Lagopus router</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="config-examples.html#layer-2-with-multiple-vlans">7.1. Layer 2 with multiple Vlans</a></li>
+<li class="toctree-l2"><a class="reference internal" href="config-examples.html#layer-3-with-multiple-vlans">7.2. Layer 3 with multiple Vlans</a></li>
+<li class="toctree-l2"><a class="reference internal" href="config-examples.html#layer-3-with-multiple-vrfs">7.3. Layer 3 with multiple VRFs</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="debug.html">8. Appendix: How to debug Lagopus software router</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="debug.html#running-vsw-in-verbose-mode">8.1. Running vsw in verbose mode</a></li>
+<li class="toctree-l2"><a class="reference internal" href="debug.html#building-vsw-with-debug-flag">8.2. Building vsw with DEBUG flag</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="virtualbox.html">9. Appendix: How to setup VM for Lagopus software router on VirtualBox</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="virtualbox.html#known-issues">9.1. Known issues</a></li>
+<li class="toctree-l2"><a class="reference internal" href="virtualbox.html#software-versions">9.2. Software Versions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="virtualbox.html#about-virtualbox">9.3. About VirtualBox</a></li>
+<li class="toctree-l2"><a class="reference internal" href="virtualbox.html#download-and-install-virtualbox">9.4. Download and Install VirtualBox</a></li>
+<li class="toctree-l2"><a class="reference internal" href="virtualbox.html#create-vm">9.5. Create VM</a></li>
+<li class="toctree-l2"><a class="reference internal" href="virtualbox.html#vm-network-setting">9.6. VM Network Setting</a></li>
+<li class="toctree-l2"><a class="reference internal" href="virtualbox.html#vm-processor-cpu-setting">9.7. VM Processor (CPU) Setting</a></li>
+<li class="toctree-l2"><a class="reference internal" href="virtualbox.html#install-guest-os-linux-ubuntu">9.8. Install Guest OS (Linux / Ubuntu)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="virtualbox.html#next-steps">9.9. Next Steps</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="preface.html" class="btn btn-neutral float-right" title="1. About this book" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, NIPPON TELEGRAPH AND TELEPHONE CORPORATION.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'0.1.0',
+            LANGUAGE:'None',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+
+  
+
+  <script type="text/javascript" src="_static/js/theme.js"></script>
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
